@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>设备管理 - AI玩具小程序</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #000 100%);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .header {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            color: #fff;
+        }
+
+        .back-button {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .content {
+            padding: 20px;
+            height: calc(100% - 88px);
+            overflow-y: auto;
+            color: #fff;
+        }
+
+        .device-header {
+            background: #2a2a3e;
+            border-radius: 20px;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .device-avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #FFB6D9 0%, #FFD6E8 100%);
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .device-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 60px;
+            object-fit: cover;
+        }
+
+        .device-name {
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .device-id {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .device-info-section {
+            background: #2a2a3e;
+            border-radius: 16px;
+            padding: 0;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .device-info-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #3a3a4e;
+        }
+
+        .device-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .device-info-label {
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .device-info-value {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: #ccc;
+        }
+
+        .battery-level {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .battery-icon {
+            width: 24px;
+            height: 12px;
+            border: 1px solid #999;
+            border-radius: 2px;
+            position: relative;
+            background: #2a2a3e;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: 3px;
+            width: 2px;
+            height: 6px;
+            background: #999;
+            border-radius: 0 1px 1px 0;
+        }
+
+        .battery-fill {
+            height: 100%;
+            background: #0f0;
+            border-radius: 1px;
+            width: 80%;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .volume-slider {
+            flex: 1;
+            height: 4px;
+            background: #3a3a4e;
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #FF8C42;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #FF8C42;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .device-action-section {
+            background: #2a2a3e;
+            border-radius: 16px;
+            padding: 0;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .device-action-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #3a3a4e;
+            cursor: pointer;
+        }
+
+        .device-action-item:last-child {
+            border-bottom: none;
+        }
+
+        .device-action-label {
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .device-action-value {
+            font-size: 15px;
+            color: #4A90E2;
+        }
+
+        .device-unbind {
+            color: #ff4444;
+        }
+
+        .arrow-icon {
+            font-size: 16px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="screen">
+            <div class="status-bar">
+                <span>13:35</span>
+                <span>🔋 100%</span>
+            </div>
+            
+            <div class="header">
+                <div class="back-button" onclick="window.location.href='mine.html'">←</div>
+                <div class="header-title">设备管理</div>
+                <div style="width: 32px;"></div>
+            </div>
+
+            <div class="content">
+                <div class="device-header">
+                    <div class="device-avatar" id="deviceAvatar">
+                        <img id="deviceAvatarImg" src="" alt="设备头像" style="display: none;">
+                        <span id="deviceAvatarPlaceholder">🤖</span>
+                    </div>
+                    <div class="device-name">小AI</div>
+                    <div class="device-id" id="deviceId">ID: 9C284003504A</div>
+                </div>
+
+                <div class="device-info-section">
+                    <div class="device-info-item">
+                        <div class="device-info-label">设备电量</div>
+                        <div class="device-info-value">
+                            <div class="battery-level">
+                                <div class="battery-icon">
+                                    <div class="battery-fill" id="batteryFill"></div>
+                                </div>
+                                <span id="batteryText">80%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="device-info-item">
+                        <div class="device-info-label">设备音量</div>
+                        <div class="device-info-value">
+                            <div class="volume-control">
+                                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50" oninput="updateVolume(this.value)">
+                                <span id="volumeText">50%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="device-action-section">
+                    <div class="device-action-item" onclick="window.location.href='pairing-guide.html?from=device-manage'">
+                        <div class="device-action-label">设备重新配网</div>
+                        <div class="device-action-value">
+                            <span class="arrow-icon">></span>
+                        </div>
+                    </div>
+                    <div class="device-action-item" onclick="unbindDevice()">
+                        <div class="device-action-label device-unbind">设备解绑</div>
+                        <div class="device-action-value device-unbind">
+                            <span class="arrow-icon">></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 更新音量
+        function updateVolume(value) {
+            document.getElementById('volumeText').textContent = value + '%';
+            // 这里应该发送指令到设备
+            console.log('设置音量:', value + '%');
+        }
+
+        // 设备解绑
+        function unbindDevice() {
+            if (confirm('确定要解绑设备吗？解绑后需要重新配网才能使用。')) {
+                // 清除设备数据
+                localStorage.removeItem('devicePaired');
+                alert('设备已解绑');
+                // 返回我的页面
+                window.location.href = 'mine.html';
+            }
+        }
+
+        // 页面加载时恢复设备信息
+        window.addEventListener('DOMContentLoaded', function() {
+            // 恢复设备头像
+            const savedAvatar = localStorage.getItem('avatar');
+            if (savedAvatar) {
+                const avatarImg = document.getElementById('deviceAvatarImg');
+                const avatarPlaceholder = document.getElementById('deviceAvatarPlaceholder');
+                avatarImg.src = savedAvatar;
+                avatarImg.style.display = 'block';
+                avatarPlaceholder.style.display = 'none';
+            } else {
+                // 根据配网状态显示不同头像
+                const isPaired = localStorage.getItem('devicePaired') === 'true';
+                if (isPaired) {
+                    document.getElementById('deviceAvatarPlaceholder').textContent = '🤖';
+                } else {
+                    document.getElementById('deviceAvatarPlaceholder').textContent = '😴';
+                }
+            }
+
+            // 恢复设备ID
+            const savedDeviceId = localStorage.getItem('deviceId');
+            if (savedDeviceId) {
+                document.getElementById('deviceId').textContent = 'ID: ' + savedDeviceId;
+            }
+
+            // 恢复电量（模拟数据）
+            const batteryLevel = localStorage.getItem('batteryLevel') || 80;
+            updateBattery(batteryLevel);
+
+            // 恢复音量
+            const volume = localStorage.getItem('deviceVolume') || 50;
+            document.getElementById('volumeSlider').value = volume;
+            document.getElementById('volumeText').textContent = volume + '%';
+        });
+
+        // 更新电量显示
+        function updateBattery(level) {
+            document.getElementById('batteryFill').style.width = level + '%';
+            document.getElementById('batteryText').textContent = level + '%';
+            
+            // 根据电量改变颜色
+            const batteryFill = document.getElementById('batteryFill');
+            if (level > 50) {
+                batteryFill.style.background = '#0f0';
+            } else if (level > 20) {
+                batteryFill.style.background = '#ffd700';
+            } else {
+                batteryFill.style.background = '#ff4444';
+            }
+        }
+
+        // 保存音量设置
+        document.getElementById('volumeSlider').addEventListener('change', function() {
+            localStorage.setItem('deviceVolume', this.value);
+        });
+    </script>
+</body>
+</html>

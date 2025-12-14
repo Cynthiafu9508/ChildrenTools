@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的 - AI玩具小程序</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #000 100%);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .header {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            color: #fff;
+            position: relative;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            position: absolute;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .header-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .content {
+            padding: 20px;
+            height: calc(100% - 88px - 50px);
+            overflow-y: auto;
+            color: #fff;
+        }
+
+        .info-section {
+            background: #2a2a3e;
+            border-radius: 16px;
+            padding: 0;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #3a3a4e;
+            cursor: pointer;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 15px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .info-value {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: #ccc;
+        }
+
+        .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #FFB6D9 0%, #FFD6E8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            object-fit: cover;
+        }
+
+        .arrow-icon {
+            font-size: 16px;
+            color: #999;
+        }
+
+        .help-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #666;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .settings-section {
+            margin-bottom: 20px;
+        }
+
+        .settings-title {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 10px;
+            padding: 0 5px;
+        }
+
+        .settings-card {
+            background: #2a2a3e;
+            border-radius: 16px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid #3a3a4e;
+            cursor: pointer;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-label {
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .settings-value {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .logout-btn {
+            width: 100%;
+            height: 50px;
+            background: #2a2a3e;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 20px;
+            border: none;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #3a3a4e;
+        }
+
+        .nav-bar {
+            height: 50px;
+            background: rgba(0,0,0,0.3);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: #fff;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 2px;
+            background: currentColor;
+            border-radius: 4px;
+        }
+
+        .nav-text {
+            font-size: 11px;
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: #2a2a3e;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-sizing: border-box;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .modal-close {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 20px;
+            text-align: center;
+            line-height: 24px;
+            color: #fff;
+        }
+
+        .avatar-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .avatar-option {
+            padding: 15px;
+            background: #3a3a4e;
+            border-radius: 12px;
+            text-align: center;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .gender-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .gender-option {
+            padding: 15px;
+            background: #3a3a4e;
+            border-radius: 12px;
+            text-align: center;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .gender-option.selected {
+            background: #FF8C42;
+        }
+
+        .date-picker {
+            padding: 15px;
+            background: #3a3a4e;
+            border-radius: 12px;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 12px;
+            background: #2a2a3e;
+            border: 1px solid #3a3a4e;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .help-content {
+            padding: 20px;
+            color: #fff;
+            line-height: 1.8;
+        }
+
+        .help-section {
+            margin-bottom: 25px;
+        }
+
+        .help-section-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .help-item {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .help-item::before {
+            content: '•';
+            position: absolute;
+            left: 8px;
+            color: #FF8C42;
+        }
+
+        .help-sub-item {
+            font-size: 13px;
+            color: #999;
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+
+        .help-contact {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #3a3a4e;
+        }
+
+        .help-contact-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .help-contact-text {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        .help-contact-email {
+            color: #4A90E2;
+        }
+
+        /* 昵称编辑弹窗 */
+        .nickname-modal {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: #2a2a3e;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            z-index: 1000;
+            display: none;
+            box-sizing: border-box;
+        }
+
+        .nickname-modal.show {
+            display: block;
+        }
+
+        .nickname-input {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a2e;
+            border: 1px solid #3a3a4e;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        .nickname-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nickname-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .nickname-btn-cancel {
+            background: #3a3a4e;
+            color: #fff;
+        }
+
+        .nickname-btn-save {
+            background: #FF8C42;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="screen">
+            <div class="status-bar">
+                <span>13:04</span>
+                <span>🔋 100%</span>
+            </div>
+            
+            <div class="header">
+                <div class="header-title">我的</div>
+                <div class="header-right">
+                    <div class="header-icon">⋯</div>
+                    <div class="header-icon">◎</div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="info-section">
+                    <div class="info-item" onclick="showAvatarOptions()">
+                        <div class="info-label">头像</div>
+                        <div class="info-value">
+                            <img class="avatar-img" id="avatarImg" src="" alt="头像" style="display: none;">
+                            <div class="avatar-img" id="avatarPlaceholder">🐱</div>
+                            <span class="arrow-icon">></span>
+                        </div>
+                    </div>
+                    <div class="info-item" onclick="editNickname()">
+                        <div class="info-label">
+                            昵称
+                            <span class="help-icon" onclick="event.stopPropagation(); showNicknameHelp()">?</span>
+                        </div>
+                        <div class="info-value">
+                            <span id="nickname">高冷的东坡肉</span>
+                            <span class="arrow-icon">></span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">UID</div>
+                        <div class="info-value">
+                            <span>jd_ruRfjUIDVXAQ</span>
+                        </div>
+                    </div>
+                    <div class="info-item" onclick="showGenderOptions()">
+                        <div class="info-label">性别</div>
+                        <div class="info-value">
+                            <span id="gender">未知</span>
+                            <span class="arrow-icon">></span>
+                        </div>
+                    </div>
+                    <div class="info-item" onclick="showDatePicker()">
+                        <div class="info-label">生日</div>
+                        <div class="info-value">
+                            <span id="birthday"></span>
+                            <span class="arrow-icon">></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-title">其他设置</div>
+                    <div class="settings-card">
+                        <div class="settings-item" onclick="window.location.href='device-manage.html'">
+                            <div class="settings-label">设备管理</div>
+                            <div class="settings-value">
+                                <span class="arrow-icon">></span>
+                            </div>
+                        </div>
+                        <div class="settings-item" onclick="window.location.href='help.html'">
+                            <div class="settings-label">帮助与客服</div>
+                            <div class="settings-value">
+                                <span class="arrow-icon">></span>
+                            </div>
+                        </div>
+                        <div class="settings-item">
+                            <div class="settings-label">版本号</div>
+                            <div class="settings-value">1.0.28</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="logout-btn" onclick="handleLogout()">退出登录</button>
+            </div>
+
+            <div class="nav-bar">
+                <div class="nav-item" onclick="window.location.href='pairing-set.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">伙伴</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='theater.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">剧场</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='growth.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">成长</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">我的</div>
+                </div>
+            </div>
+
+            <!-- 头像选择弹窗 -->
+            <div class="modal" id="avatarModal">
+                <div class="modal-header">
+                    <div class="modal-title">选择头像</div>
+                    <div class="modal-close" onclick="closeModal('avatarModal')">×</div>
+                </div>
+                <div class="avatar-options">
+                    <div class="avatar-option" onclick="selectAvatar('camera')">拍照</div>
+                    <div class="avatar-option" onclick="selectAvatar('album')">从手机相册选择</div>
+                    <div class="avatar-option" onclick="closeModal('avatarModal')" style="margin-top: 10px; border-top: 1px solid #3a3a4e; padding-top: 15px;">取消</div>
+                </div>
+            </div>
+
+            <!-- 性别选择弹窗 -->
+            <div class="modal" id="genderModal">
+                <div class="modal-header">
+                    <div class="modal-title">选择性别</div>
+                    <div class="modal-close" onclick="closeModal('genderModal')">×</div>
+                </div>
+                <div class="gender-options">
+                    <div class="gender-option" onclick="selectGender('男')">男</div>
+                    <div class="gender-option" onclick="selectGender('女')">女</div>
+                    <div class="gender-option" onclick="selectGender('其他')">其他</div>
+                </div>
+            </div>
+
+            <!-- 日期选择弹窗 -->
+            <div class="modal" id="dateModal">
+                <div class="modal-header">
+                    <div class="modal-title">选择生日</div>
+                    <div class="modal-close" onclick="closeModal('dateModal')">×</div>
+                </div>
+                <div class="date-picker">
+                    <input type="date" class="date-input" id="birthdayInput" onchange="selectBirthday()">
+                </div>
+            </div>
+
+
+            <!-- 昵称编辑弹窗 -->
+            <div class="nickname-modal" id="nicknameModal">
+                <div class="modal-header">
+                    <div class="modal-title">修改昵称</div>
+                    <div class="modal-close" onclick="closeModal('nicknameModal')">×</div>
+                </div>
+                <input type="text" class="nickname-input" id="nicknameInput" placeholder="请输入昵称" maxlength="20">
+                <div class="nickname-buttons">
+                    <button class="nickname-btn nickname-btn-cancel" onclick="closeModal('nicknameModal')">取消</button>
+                    <button class="nickname-btn nickname-btn-save" onclick="saveNickname()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+
+    <script>
+        // 显示头像选择
+        function showAvatarOptions() {
+            document.getElementById('avatarModal').classList.add('show');
+        }
+
+        // 选择头像方式
+        function selectAvatar(type) {
+            if (type === 'camera') {
+                // 调用相机
+                document.getElementById('fileInput').setAttribute('capture', 'environment');
+                document.getElementById('fileInput').click();
+            } else if (type === 'album') {
+                // 从相册选择
+                document.getElementById('fileInput').removeAttribute('capture');
+                document.getElementById('fileInput').click();
+            }
+            closeModal('avatarModal');
+        }
+
+        // 处理文件选择
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatarImg = document.getElementById('avatarImg');
+                    const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+                    avatarImg.src = e.target.result;
+                    avatarImg.style.display = 'block';
+                    avatarPlaceholder.style.display = 'none';
+                    // 保存到localStorage
+                    localStorage.setItem('avatar', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 显示昵称帮助
+        function showNicknameHelp() {
+            alert('小朋友的昵称');
+        }
+
+        // 编辑昵称
+        function editNickname() {
+            const currentNickname = document.getElementById('nickname').textContent;
+            document.getElementById('nicknameInput').value = currentNickname;
+            document.getElementById('nicknameModal').classList.add('show');
+        }
+
+        // 保存昵称
+        function saveNickname() {
+            const newNickname = document.getElementById('nicknameInput').value.trim();
+            if (newNickname) {
+                document.getElementById('nickname').textContent = newNickname;
+                localStorage.setItem('nickname', newNickname);
+                closeModal('nicknameModal');
+            } else {
+                alert('昵称不能为空');
+            }
+        }
+
+        // 显示性别选择
+        function showGenderOptions() {
+            document.getElementById('genderModal').classList.add('show');
+        }
+
+        // 选择性别
+        function selectGender(gender) {
+            document.getElementById('gender').textContent = gender;
+            localStorage.setItem('gender', gender);
+            closeModal('genderModal');
+        }
+
+        // 显示日期选择
+        function showDatePicker() {
+            const savedBirthday = localStorage.getItem('birthday');
+            if (savedBirthday) {
+                document.getElementById('birthdayInput').value = savedBirthday;
+            }
+            document.getElementById('dateModal').classList.add('show');
+        }
+
+        // 选择生日
+        function selectBirthday() {
+            const birthday = document.getElementById('birthdayInput').value;
+            if (birthday) {
+                const date = new Date(birthday);
+                const formattedDate = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+                document.getElementById('birthday').textContent = formattedDate;
+                localStorage.setItem('birthday', birthday);
+            }
+            closeModal('dateModal');
+        }
+
+        // 关闭弹窗
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // 退出登录
+        function handleLogout() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.clear();
+                alert('已退出登录');
+            }
+        }
+
+        // 页面加载时恢复数据
+        window.addEventListener('DOMContentLoaded', function() {
+            // 恢复头像
+            const savedAvatar = localStorage.getItem('avatar');
+            if (savedAvatar) {
+                const avatarImg = document.getElementById('avatarImg');
+                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+                avatarImg.src = savedAvatar;
+                avatarImg.style.display = 'block';
+                avatarPlaceholder.style.display = 'none';
+            }
+
+            // 恢复性别
+            const savedGender = localStorage.getItem('gender');
+            if (savedGender) {
+                document.getElementById('gender').textContent = savedGender;
+            }
+
+            // 恢复生日
+            const savedBirthday = localStorage.getItem('birthday');
+            if (savedBirthday) {
+                const date = new Date(savedBirthday);
+                const formattedDate = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+                document.getElementById('birthday').textContent = formattedDate;
+            }
+
+            // 恢复昵称
+            const savedNickname = localStorage.getItem('nickname');
+            if (savedNickname) {
+                document.getElementById('nickname').textContent = savedNickname;
+            }
+        });
+    </script>
+</body>
+</html>

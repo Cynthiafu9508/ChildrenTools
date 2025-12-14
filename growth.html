@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>成长 - AI玩具小程序</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #FFF4E6 0%, #FFF8F0 100%);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .content {
+            padding: 20px;
+            height: calc(100% - 44px - 50px);
+            overflow-y: auto;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .function-section {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .function-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .function-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .function-icon {
+            font-size: 24px;
+        }
+
+        .random-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            border-radius: 20px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.3s;
+        }
+
+        .random-btn:hover {
+            opacity: 0.8;
+        }
+
+        .random-btn:active {
+            opacity: 0.6;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: 12px;
+        }
+
+        .language-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .language-select {
+            flex: 1;
+            padding: 8px 12px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .language-select:focus {
+            border-color: #FF8C42;
+        }
+
+        .options-list {
+            display: none;
+        }
+
+        .options-list.show {
+            display: block;
+        }
+
+        .option-item {
+            background: linear-gradient(135deg, #FFE5CC 0%, #FFF0E0 100%);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .option-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .option-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .option-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .stats-section {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stats-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF8C42;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .nav-bar {
+            height: 50px;
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+            color: #999;
+        }
+
+        .nav-item.active {
+            color: #FF8C42;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 2px;
+            background: currentColor;
+            border-radius: 4px;
+        }
+
+        .nav-text {
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="screen">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>🔋 100%</span>
+            </div>
+            
+            <div class="content">
+                <div class="page-title">成长</div>
+
+                <!-- 口语启蒙 -->
+                <div class="function-section">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">🗣️</span>
+                            <span>口语启蒙</span>
+                        </div>
+                        <button class="random-btn" onclick="generateOralTopics()">随机生成</button>
+                    </div>
+                    <div class="language-selector">
+                        <div class="language-label">语言设置：</div>
+                        <select class="language-select" id="oralLanguage" onchange="changeOralLanguage()">
+                            <option value="en">英语</option>
+                            <option value="ko">韩语</option>
+                            <option value="ja">日语</option>
+                            <option value="fr">法语</option>
+                            <option value="de">德语</option>
+                            <option value="es">西班牙语</option>
+                        </select>
+                    </div>
+                    <div class="options-list" id="oralOptions">
+                        <div class="option-item" onclick="selectTopic('oral', '日常问候')">
+                            <div class="option-title">日常问候</div>
+                            <div class="option-desc">学习基本的问候用语，如"你好"、"再见"等</div>
+                        </div>
+                        <div class="option-item" onclick="selectTopic('oral', '颜色认知')">
+                            <div class="option-title">颜色认知</div>
+                            <div class="option-desc">通过对话学习各种颜色的名称和表达</div>
+                        </div>
+                        <div class="option-item" onclick="selectTopic('oral', '动物世界')">
+                            <div class="option-title">动物世界</div>
+                            <div class="option-desc">认识各种动物，学习它们的名称和特征</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 数感培养 -->
+                <div class="function-section">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">🔢</span>
+                            <span>数感培养</span>
+                        </div>
+                        <button class="random-btn" onclick="generateMathTopics()">随机生成</button>
+                    </div>
+                    <div class="options-list" id="mathOptions">
+                        <div class="option-item" onclick="selectTopic('math', '数数游戏')">
+                            <div class="option-title">数数游戏</div>
+                            <div class="option-desc">通过有趣的游戏学习1-10的数字</div>
+                        </div>
+                        <div class="option-item" onclick="selectTopic('math', '形状认知')">
+                            <div class="option-title">形状认知</div>
+                            <div class="option-desc">认识圆形、方形、三角形等基本形状</div>
+                        </div>
+                        <div class="option-item" onclick="selectTopic('math', '大小比较')">
+                            <div class="option-title">大小比较</div>
+                            <div class="option-desc">学习比较大小、多少等基本概念</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 睡前故事 -->
+                <div class="function-section">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">📖</span>
+                            <span>睡前故事</span>
+                        </div>
+                        <button class="random-btn" onclick="generateStories()">随机生成</button>
+                    </div>
+                    <div class="options-list" id="storyOptions">
+                        <div class="option-item" onclick="selectTopic('story', '小兔子的冒险')">
+                            <div class="option-title">小兔子的冒险</div>
+                            <div class="option-desc">温暖治愈的睡前故事，帮助孩子安静入睡</div>
+                        </div>
+                        <div class="option-item" onclick="selectTopic('story', '星星的梦想')">
+                            <div class="option-title">星星的梦想</div>
+                            <div class="option-desc">充满想象力的故事，激发孩子的创造力</div>
+                        </div>
+                        <div class="option-item" onclick="selectTopic('story', '森林里的朋友')">
+                            <div class="option-title">森林里的朋友</div>
+                            <div class="option-desc">关于友谊和分享的温馨故事</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 统计数据 -->
+                <div class="stats-section">
+                    <div class="stats-title">互动统计</div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="oralCount">12</div>
+                            <div class="stat-label">口语启蒙</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="mathCount">8</div>
+                            <div class="stat-label">数感培养</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="storyCount">15</div>
+                            <div class="stat-label">睡前故事</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-bar">
+                <div class="nav-item" onclick="window.location.href='pairing-set.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">伙伴</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='theater.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">剧场</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">成长</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='mine.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">我的</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 口语启蒙主题库
+        const oralTopics = [
+            { title: '日常问候', desc: '学习基本的问候用语，如"你好"、"再见"等' },
+            { title: '颜色认知', desc: '通过对话学习各种颜色的名称和表达' },
+            { title: '动物世界', desc: '认识各种动物，学习它们的名称和特征' },
+            { title: '家庭成员', desc: '学习家庭成员的称呼和关系' },
+            { title: '食物名称', desc: '认识各种食物，学习它们的名称' },
+            { title: '身体部位', desc: '学习身体各部位的名称和功能' },
+            { title: '天气表达', desc: '学习描述天气的词汇和表达' },
+            { title: '动作词汇', desc: '学习跑、跳、走等基本动作词汇' },
+            { title: '情感表达', desc: '学习表达开心、难过等情感词汇' }
+        ];
+
+        // 数感培养主题库
+        const mathTopics = [
+            { title: '数数游戏', desc: '通过有趣的游戏学习1-10的数字' },
+            { title: '形状认知', desc: '认识圆形、方形、三角形等基本形状' },
+            { title: '大小比较', desc: '学习比较大小、多少等基本概念' },
+            { title: '数字配对', desc: '通过配对游戏认识数字' },
+            { title: '数量对应', desc: '学习数字与数量的对应关系' },
+            { title: '简单排序', desc: '学习从小到大、从高到低等排序概念' },
+            { title: '空间方位', desc: '学习上下、左右、前后等空间概念' },
+            { title: '时间概念', desc: '学习早上、中午、晚上等时间概念' },
+            { title: '简单分类', desc: '学习按颜色、形状等特征分类' }
+        ];
+
+        // 睡前故事库
+        const stories = [
+            { title: '小兔子的冒险', desc: '温暖治愈的睡前故事，帮助孩子安静入睡' },
+            { title: '星星的梦想', desc: '充满想象力的故事，激发孩子的创造力' },
+            { title: '森林里的朋友', desc: '关于友谊和分享的温馨故事' },
+            { title: '月亮的故事', desc: '关于月亮的美丽传说，适合睡前聆听' },
+            { title: '小熊的晚安', desc: '温馨的晚安故事，帮助孩子进入梦乡' },
+            { title: '彩虹桥', desc: '充满色彩的故事，带给孩子美好的梦境' },
+            { title: '小星星的旅程', desc: '关于探索和发现的睡前故事' },
+            { title: '花园里的秘密', desc: '充满想象力的奇幻故事' },
+            { title: '温暖的拥抱', desc: '关于爱和关怀的温馨故事' }
+        ];
+
+        // 随机生成口语启蒙主题
+        function generateOralTopics() {
+            // 收起其他功能的选项列表
+            document.getElementById('mathOptions').classList.remove('show');
+            document.getElementById('storyOptions').classList.remove('show');
+            
+            const options = document.getElementById('oralOptions');
+            const shuffled = [...oralTopics].sort(() => Math.random() - 0.5).slice(0, 3);
+            
+            options.innerHTML = shuffled.map(topic => `
+                <div class="option-item" onclick="selectTopic('oral', '${topic.title}')">
+                    <div class="option-title">${topic.title}</div>
+                    <div class="option-desc">${topic.desc}</div>
+                </div>
+            `).join('');
+            
+            options.classList.add('show');
+        }
+
+        // 随机生成数感培养主题
+        function generateMathTopics() {
+            // 收起其他功能的选项列表
+            document.getElementById('oralOptions').classList.remove('show');
+            document.getElementById('storyOptions').classList.remove('show');
+            
+            const options = document.getElementById('mathOptions');
+            const shuffled = [...mathTopics].sort(() => Math.random() - 0.5).slice(0, 3);
+            
+            options.innerHTML = shuffled.map(topic => `
+                <div class="option-item" onclick="selectTopic('math', '${topic.title}')">
+                    <div class="option-title">${topic.title}</div>
+                    <div class="option-desc">${topic.desc}</div>
+                </div>
+            `).join('');
+            
+            options.classList.add('show');
+        }
+
+        // 随机生成睡前故事
+        function generateStories() {
+            // 收起其他功能的选项列表
+            document.getElementById('oralOptions').classList.remove('show');
+            document.getElementById('mathOptions').classList.remove('show');
+            
+            const options = document.getElementById('storyOptions');
+            const shuffled = [...stories].sort(() => Math.random() - 0.5).slice(0, 3);
+            
+            options.innerHTML = shuffled.map(story => `
+                <div class="option-item" onclick="selectTopic('story', '${story.title}')">
+                    <div class="option-title">${story.title}</div>
+                    <div class="option-desc">${story.desc}</div>
+                </div>
+            `).join('');
+            
+            options.classList.add('show');
+        }
+
+        // 切换口语启蒙语言
+        function changeOralLanguage() {
+            const language = document.getElementById('oralLanguage').value;
+            const languageNames = {
+                'en': '英语',
+                'ko': '韩语',
+                'ja': '日语',
+                'fr': '法语',
+                'de': '德语',
+                'es': '西班牙语'
+            };
+            console.log(`切换语言为: ${languageNames[language]}`);
+            // 保存语言设置
+            localStorage.setItem('oralLanguage', language);
+        }
+
+        // 选择主题
+        function selectTopic(type, title) {
+            let language = '';
+            if (type === 'oral') {
+                language = document.getElementById('oralLanguage').value;
+                const languageNames = {
+                    'en': '英语',
+                    'ko': '韩语',
+                    'ja': '日语',
+                    'fr': '法语',
+                    'de': '德语',
+                    'es': '西班牙语'
+                };
+                language = languageNames[language];
+            }
+            
+            // 这里应该发送指令到线下玩偶
+            console.log(`选择${type}主题: ${title}${language ? ` (${language})` : ''}`);
+            const message = language 
+                ? `已选择：${title}\n语言：${language}\n玩偶将开始讲述并和孩子展开对话`
+                : `已选择：${title}\n玩偶将开始讲述并和孩子展开对话`;
+            alert(message);
+            
+            // 更新统计数据
+            updateStats(type);
+        }
+
+        // 更新统计数据
+        function updateStats(type) {
+            const counts = {
+                oral: parseInt(document.getElementById('oralCount').textContent) || 0,
+                math: parseInt(document.getElementById('mathCount').textContent) || 0,
+                story: parseInt(document.getElementById('storyCount').textContent) || 0
+            };
+            
+            counts[type]++;
+            
+            document.getElementById('oralCount').textContent = counts.oral;
+            document.getElementById('mathCount').textContent = counts.math;
+            document.getElementById('storyCount').textContent = counts.story;
+            
+            // 保存到localStorage
+            localStorage.setItem('growthStats', JSON.stringify(counts));
+        }
+
+        // 页面加载时恢复统计数据
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedStats = localStorage.getItem('growthStats');
+            if (savedStats) {
+                const stats = JSON.parse(savedStats);
+                document.getElementById('oralCount').textContent = stats.oral || 0;
+                document.getElementById('mathCount').textContent = stats.math || 0;
+                document.getElementById('storyCount').textContent = stats.story || 0;
+            }
+            
+            // 恢复语言设置
+            const savedLanguage = localStorage.getItem('oralLanguage');
+            if (savedLanguage) {
+                document.getElementById('oralLanguage').value = savedLanguage;
+            }
+        });
+    </script>
+</body>
+</html>

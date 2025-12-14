@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI玩具小程序 - 原型图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .page-container {
+            height: calc(100% - 44px - 50px);
+            overflow-y: auto;
+            background: #f8f8f8;
+        }
+
+        .nav-bar {
+            height: 50px;
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: #007AFF;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 2px;
+            background: currentColor;
+            border-radius: 4px;
+        }
+
+        .nav-text {
+            font-size: 11px;
+        }
+
+        .page {
+            display: none;
+            padding: 20px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .placeholder-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+            margin-bottom: 15px;
+        }
+
+        .placeholder-box.large {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .placeholder-box.medium {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .placeholder-box.small {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 伙伴页面样式 */
+        .partner-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .doll-container {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .partner-actions {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .doll-image {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FFB6D9 0%, #FFD6E8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* 睡眠状态 */
+        .doll-image.sleep {
+            opacity: 0.6;
+            transform: scale(0.9);
+            animation: none;
+        }
+
+        /* 清醒跳跃状态 */
+        .doll-image.awake {
+            opacity: 1;
+            animation: jump 1s ease-in-out infinite;
+        }
+
+        @keyframes jump {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.05);
+            }
+        }
+
+        .add-button {
+            width: 200px;
+            height: 44px;
+            background: #333;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .add-button:hover {
+            background: #555;
+        }
+
+        .add-button-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .pairing-tip {
+            font-size: 14px;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="screen">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>🔋 100%</span>
+            </div>
+            
+            <div class="page-container">
+                <!-- 伙伴 -->
+                <div class="page active partner-page" id="home">
+                    <div class="doll-container">
+                        <div class="doll-image" id="dollImage">🧸</div>
+                    </div>
+                    <div class="partner-actions">
+                        <div class="add-button" onclick="window.location.href='pairing-guide.html'">
+                            <span class="add-button-icon">+</span>
+                            <span>添加伙伴</span>
+                        </div>
+                        <div class="pairing-tip">请确保设备已开机，且蓝牙处于打开状态。</div>
+                    </div>
+                </div>
+
+                <!-- 剧场 -->
+                <div class="page" id="theater">
+                    <div class="page-title">剧场</div>
+                    <div class="placeholder-box large">剧场内容展示</div>
+                    <div class="placeholder-box medium">故事列表</div>
+                    <div class="placeholder-box small">播放控制</div>
+                </div>
+
+                <!-- 成长 -->
+                <div class="page" id="growth">
+                    <div class="page-title">成长</div>
+                    <div class="placeholder-box large">成长记录</div>
+                    <div class="placeholder-box medium">成就系统</div>
+                    <div class="placeholder-box small">数据统计</div>
+                </div>
+
+                <!-- 我的 -->
+                <div class="page" id="mine">
+                    <div class="page-title">我的</div>
+                    <div class="placeholder-box large">用户信息</div>
+                    <div class="placeholder-box medium">设置选项</div>
+                    <div class="placeholder-box small">其他功能</div>
+                </div>
+            </div>
+
+            <div class="nav-bar">
+                <div class="nav-item active" data-page="home">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">伙伴</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='theater.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">剧场</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='growth.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">成长</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='mine.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">我的</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 检查配网状态
+        function checkPairingStatus() {
+            const dollImage = document.getElementById('dollImage');
+            const isPaired = localStorage.getItem('devicePaired') === 'true';
+            
+            if (isPaired) {
+                // 配网完成 - 清醒跳跃状态
+                dollImage.classList.remove('sleep');
+                dollImage.classList.add('awake');
+                dollImage.innerHTML = '🤖';
+            } else {
+                // 未配网 - 睡眠状态
+                dollImage.classList.remove('awake');
+                dollImage.classList.add('sleep');
+                dollImage.innerHTML = '😴';
+            }
+        }
+
+        // 检查URL参数（从配网页面返回时）
+        function checkUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('paired') === 'true') {
+                localStorage.setItem('devicePaired', 'true');
+                // 清除URL参数
+                window.history.replaceState({}, document.title, window.location.pathname);
+                checkPairingStatus();
+            } else {
+                checkPairingStatus();
+            }
+        }
+
+        // 页面加载时检查状态
+        checkUrlParams();
+
+        // 导航栏切换
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const pageId = this.getAttribute('data-page');
+                
+                // 切换页面
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById(pageId).classList.add('active');
+                
+                // 切换导航状态
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
