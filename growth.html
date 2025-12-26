@@ -110,36 +110,103 @@
             opacity: 0.6;
         }
 
-        .language-selector {
+        .parent-input-section {
             display: flex;
-            align-items: center;
             gap: 10px;
             margin-bottom: 15px;
-            padding: 10px;
+        }
+
+        .parent-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .parent-input:focus {
+            border-color: #FF8C42;
+        }
+
+        .generate-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+        }
+
+        .generate-btn:hover {
+            opacity: 0.8;
+        }
+
+        .generate-btn:active {
+            opacity: 0.6;
+        }
+
+        .example-section {
+            margin-bottom: 15px;
+        }
+
+        .example-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .example-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .example-tag {
+            padding: 6px 12px;
             background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .example-tag:hover {
+            background: #FFE5CC;
+            border-color: #FF8C42;
+            color: #FF8C42;
+        }
+
+        .result-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #FFE5CC 0%, #FFF0E0 100%);
             border-radius: 12px;
         }
 
-        .language-label {
-            font-size: 14px;
+        .result-label {
+            font-size: 13px;
             color: #666;
+            margin-bottom: 10px;
         }
 
-        .language-select {
-            flex: 1;
-            padding: 8px 12px;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
+        .result-content {
+            font-size: 15px;
             color: #333;
-            cursor: pointer;
-            outline: none;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #fff;
+            border-radius: 8px;
         }
 
-        .language-select:focus {
-            border-color: #FF8C42;
-        }
+
 
         .options-list {
             display: none;
@@ -188,16 +255,37 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
         .stats-title {
             font-size: 18px;
             font-weight: bold;
             color: #333;
-            margin-bottom: 15px;
+        }
+
+        .time-filter {
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .time-filter:focus {
+            border-color: #FF8C42;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
         }
 
@@ -268,25 +356,14 @@
             <div class="content">
                 <div class="page-title">成长</div>
 
-                <!-- 口语启蒙 -->
+                <!-- 英语启蒙 -->
                 <div class="function-section">
                     <div class="function-header">
                         <div class="function-title">
                             <span class="function-icon">🗣️</span>
-                            <span>口语启蒙</span>
+                            <span>英语启蒙</span>
                         </div>
-                        <button class="random-btn" onclick="generateOralTopics()">随机生成</button>
-                    </div>
-                    <div class="language-selector">
-                        <div class="language-label">语言设置：</div>
-                        <select class="language-select" id="oralLanguage" onchange="changeOralLanguage()">
-                            <option value="en">英语</option>
-                            <option value="ko">韩语</option>
-                            <option value="ja">日语</option>
-                            <option value="fr">法语</option>
-                            <option value="de">德语</option>
-                            <option value="es">西班牙语</option>
-                        </select>
+                        <button class="random-btn" onclick="generateOralTopics()">随机生成主题</button>
                     </div>
                     <div class="options-list" id="oralOptions">
                         <div class="option-item" onclick="selectTopic('oral', '日常问候')">
@@ -304,6 +381,31 @@
                     </div>
                 </div>
 
+                <!-- 习惯养成 -->
+                <div class="function-section">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">🌱</span>
+                            <span>习惯养成</span>
+                        </div>
+                        <button class="random-btn" onclick="generateHabitTopics()">随机生成主题</button>
+                    </div>
+                    <div class="options-list" id="habitOptions">
+                        <div class="option-item" onclick="selectTopic('habit', '早睡早起')">
+                            <div class="option-title">早睡早起</div>
+                            <div class="option-desc">培养健康的作息习惯</div>
+                        </div>
+                        <div class="option-item" onclick="selectTopic('habit', '整理玩具')">
+                            <div class="option-title">整理玩具</div>
+                            <div class="option-desc">学习收拾整理，培养责任感</div>
+                        </div>
+                        <div class="option-item" onclick="selectTopic('habit', '自己吃饭')">
+                            <div class="option-title">自己吃饭</div>
+                            <div class="option-desc">培养独立就餐的好习惯</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 数感培养 -->
                 <div class="function-section">
                     <div class="function-header">
@@ -311,7 +413,7 @@
                             <span class="function-icon">🔢</span>
                             <span>数感培养</span>
                         </div>
-                        <button class="random-btn" onclick="generateMathTopics()">随机生成</button>
+                        <button class="random-btn" onclick="generateMathTopics()">随机生成主题</button>
                     </div>
                     <div class="options-list" id="mathOptions">
                         <div class="option-item" onclick="selectTopic('math', '数数游戏')">
@@ -336,7 +438,7 @@
                             <span class="function-icon">📖</span>
                             <span>睡前故事</span>
                         </div>
-                        <button class="random-btn" onclick="generateStories()">随机生成</button>
+                        <button class="random-btn" onclick="generateStories()">随机生成主题</button>
                     </div>
                     <div class="options-list" id="storyOptions">
                         <div class="option-item" onclick="selectTopic('story', '小兔子的冒险')">
@@ -354,13 +456,54 @@
                     </div>
                 </div>
 
+                <!-- 家长嘴替 -->
+                <div class="function-section">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">💬</span>
+                            <span>家长嘴替</span>
+                        </div>
+                    </div>
+                    <div class="parent-input-section">
+                        <input type="text" class="parent-input" id="parentInput" placeholder="输入需求，如：让孩子起床" />
+                        <button class="generate-btn" onclick="sendToDoll()">星宝转达</button>
+                    </div>
+                    <div class="example-section">
+                        <div class="example-label">示例场景：</div>
+                        <div class="example-tags">
+                            <span class="example-tag" onclick="fillExample('让孩子起床')">让孩子起床</span>
+                            <span class="example-tag" onclick="fillExample('鼓励孩子完成任务')">鼓励孩子完成任务</span>
+                            <span class="example-tag" onclick="fillExample('安抚孩子情绪')">安抚孩子情绪</span>
+                            <span class="example-tag" onclick="fillExample('引导孩子吃饭')">引导孩子吃饭</span>
+                            <span class="example-tag" onclick="fillExample('让孩子收拾玩具')">让孩子收拾玩具</span>
+                            <span class="example-tag" onclick="fillExample('引导孩子睡觉')">引导孩子睡觉</span>
+                        </div>
+                    </div>
+                    <div class="result-section" id="parentResult" style="display: none;">
+                        <div class="result-label">状态：</div>
+                        <div class="result-content" id="parentResultContent"></div>
+                    </div>
+                </div>
+
                 <!-- 统计数据 -->
                 <div class="stats-section">
-                    <div class="stats-title">互动统计</div>
+                    <div class="stats-header">
+                        <div class="stats-title">互动统计</div>
+                        <select class="time-filter" id="timeFilter" onchange="filterStats()">
+                            <option value="1">今天</option>
+                            <option value="7" selected>近7天</option>
+                            <option value="30">近30天</option>
+                            <option value="all">全部</option>
+                        </select>
+                    </div>
                     <div class="stats-grid">
                         <div class="stat-item">
                             <div class="stat-value" id="oralCount">12</div>
-                            <div class="stat-label">口语启蒙</div>
+                            <div class="stat-label">英语启蒙</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="habitCount">6</div>
+                            <div class="stat-label">习惯养成</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-value" id="mathCount">8</div>
@@ -396,17 +539,33 @@
     </div>
 
     <script>
-        // 口语启蒙主题库
+        // 英语启蒙主题库
         const oralTopics = [
-            { title: '日常问候', desc: '学习基本的问候用语，如"你好"、"再见"等' },
-            { title: '颜色认知', desc: '通过对话学习各种颜色的名称和表达' },
-            { title: '动物世界', desc: '认识各种动物，学习它们的名称和特征' },
-            { title: '家庭成员', desc: '学习家庭成员的称呼和关系' },
-            { title: '食物名称', desc: '认识各种食物，学习它们的名称' },
-            { title: '身体部位', desc: '学习身体各部位的名称和功能' },
-            { title: '天气表达', desc: '学习描述天气的词汇和表达' },
-            { title: '动作词汇', desc: '学习跑、跳、走等基本动作词汇' },
-            { title: '情感表达', desc: '学习表达开心、难过等情感词汇' }
+            { title: '日常问候', desc: '学习基本的问候用语，如"Hello"、"Goodbye"、"Thank you"等' },
+            { title: '颜色认知', desc: '通过对话学习各种颜色的英文名称，如"Red"、"Blue"、"Yellow"等' },
+            { title: '动物世界', desc: '认识各种动物的英文名称，如"Dog"、"Cat"、"Bird"、"Fish"等' },
+            { title: '家庭成员', desc: '学习家庭成员的英文称呼，如"Mom"、"Dad"、"Sister"、"Brother"等' },
+            { title: '食物名称', desc: '认识各种食物的英文名称，如"Apple"、"Milk"、"Bread"、"Egg"等' },
+            { title: '身体部位', desc: '学习身体各部位的英文名称，如"Head"、"Hand"、"Foot"、"Eye"等' },
+            { title: '天气表达', desc: '学习描述天气的英文词汇，如"Sunny"、"Rainy"、"Cloudy"、"Windy"等' },
+            { title: '动作词汇', desc: '学习基本动作词汇，如"Run"、"Jump"、"Walk"、"Sit"、"Stand"等' },
+            { title: '情感表达', desc: '学习表达情感的词汇，如"Happy"、"Sad"、"Angry"、"Excited"等' },
+            { title: '数字学习', desc: '学习基础数字的英文表达，如"One"、"Two"、"Three"、"Four"、"Five"等' },
+            { title: '玩具名称', desc: '认识各种玩具的英文名称，如"Ball"、"Doll"、"Car"、"Blocks"等' },
+            { title: '衣物穿着', desc: '学习衣物的英文名称，如"Shirt"、"Pants"、"Shoes"、"Hat"等' }
+        ];
+
+        // 习惯养成主题库
+        const habitTopics = [
+            { title: '早睡早起', desc: '培养健康的作息习惯' },
+            { title: '整理玩具', desc: '学习收拾整理，培养责任感' },
+            { title: '自己吃饭', desc: '培养独立就餐的好习惯' },
+            { title: '刷牙洗脸', desc: '养成良好的个人卫生习惯' },
+            { title: '礼貌用语', desc: '学习使用"请"、"谢谢"等礼貌用语' },
+            { title: '分享玩具', desc: '培养与他人分享的习惯' },
+            { title: '自己穿衣', desc: '学习独立穿衣的能力' },
+            { title: '饭前洗手', desc: '养成良好的卫生习惯' },
+            { title: '爱护图书', desc: '学习爱护书籍和物品' }
         ];
 
         // 数感培养主题库
@@ -435,9 +594,26 @@
             { title: '温暖的拥抱', desc: '关于爱和关怀的温馨故事' }
         ];
 
-        // 随机生成口语启蒙主题
+        // 家长嘴替话术库
+        const parentTips = [
+            { title: '起床话术', desc: '温柔唤醒孩子，如"宝贝，新的一天开始啦，太阳公公在等你呢"' },
+            { title: '鼓励表扬', desc: '积极正面的鼓励，如"你真棒！妈妈看到你很努力"' },
+            { title: '情绪安抚', desc: '处理孩子情绪，如"宝贝，我知道你现在很难过，我们一起想办法"' },
+            { title: '吃饭引导', desc: '引导孩子好好吃饭，如"哇，今天的饭菜好香啊，我们一起来尝尝"' },
+            { title: '收拾玩具', desc: '引导孩子整理，如"玩具们累了，我们送它们回家休息好吗"' },
+            { title: '睡前引导', desc: '帮助孩子入睡，如"宝贝真乖，现在该睡觉啦，明天又是美好的一天"' },
+            { title: '分享引导', desc: '引导孩子分享，如"和小朋友一起玩会更开心哦"' },
+            { title: '耐心等待', desc: '培养耐心，如"我们再等一会儿，宝贝可以做到的"' },
+            { title: '道歉引导', desc: '引导孩子道歉，如"说对不起是勇敢的表现，妈妈为你骄傲"' },
+            { title: '拒绝话术', desc: '温和说不，如"宝贝，妈妈理解你的想法，但这次我们不能这样做"' },
+            { title: '任务完成', desc: '完成任务后的鼓励，如"太棒了！你完成得很好，妈妈很高兴"' },
+            { title: '出门准备', desc: '出门前的引导，如"我们要出门啦，记得带上你的小水壶哦"' }
+        ];
+
+        // 随机生成英语启蒙主题
         function generateOralTopics() {
             // 收起其他功能的选项列表
+            document.getElementById('habitOptions').classList.remove('show');
             document.getElementById('mathOptions').classList.remove('show');
             document.getElementById('storyOptions').classList.remove('show');
             
@@ -454,10 +630,31 @@
             options.classList.add('show');
         }
 
+        // 随机生成习惯养成主题
+        function generateHabitTopics() {
+            // 收起其他功能的选项列表
+            document.getElementById('oralOptions').classList.remove('show');
+            document.getElementById('mathOptions').classList.remove('show');
+            document.getElementById('storyOptions').classList.remove('show');
+            
+            const options = document.getElementById('habitOptions');
+            const shuffled = [...habitTopics].sort(() => Math.random() - 0.5).slice(0, 3);
+            
+            options.innerHTML = shuffled.map(topic => `
+                <div class="option-item" onclick="selectTopic('habit', '${topic.title}')">
+                    <div class="option-title">${topic.title}</div>
+                    <div class="option-desc">${topic.desc}</div>
+                </div>
+            `).join('');
+            
+            options.classList.add('show');
+        }
+
         // 随机生成数感培养主题
         function generateMathTopics() {
             // 收起其他功能的选项列表
             document.getElementById('oralOptions').classList.remove('show');
+            document.getElementById('habitOptions').classList.remove('show');
             document.getElementById('storyOptions').classList.remove('show');
             
             const options = document.getElementById('mathOptions');
@@ -477,6 +674,7 @@
         function generateStories() {
             // 收起其他功能的选项列表
             document.getElementById('oralOptions').classList.remove('show');
+            document.getElementById('habitOptions').classList.remove('show');
             document.getElementById('mathOptions').classList.remove('show');
             
             const options = document.getElementById('storyOptions');
@@ -492,44 +690,45 @@
             options.classList.add('show');
         }
 
-        // 切换口语启蒙语言
-        function changeOralLanguage() {
-            const language = document.getElementById('oralLanguage').value;
-            const languageNames = {
-                'en': '英语',
-                'ko': '韩语',
-                'ja': '日语',
-                'fr': '法语',
-                'de': '德语',
-                'es': '西班牙语'
-            };
-            console.log(`切换语言为: ${languageNames[language]}`);
-            // 保存语言设置
-            localStorage.setItem('oralLanguage', language);
+        // 填充示例场景
+        function fillExample(text) {
+            document.getElementById('parentInput').value = text;
+        }
+
+        // 发送指令给实体玩偶
+        function sendToDoll() {
+            const input = document.getElementById('parentInput').value.trim();
+            if (!input) {
+                alert('请输入需求描述');
+                return;
+            }
+
+            // 显示发送状态
+            document.getElementById('parentResultContent').textContent = '正在发送指令给玩偶...';
+            document.getElementById('parentResult').style.display = 'block';
+
+            // 这里应该通过API发送指令给实体玩偶
+            // 玩偶会根据输入的需求，以自己的性格设定来对孩子说话
+            console.log('发送指令给玩偶:', input);
+            
+            // 模拟发送指令（实际应该调用后端API）
+            setTimeout(() => {
+                document.getElementById('parentResultContent').innerHTML = 
+                    '✅ 指令已发送！<br>星宝正在以自己的方式对孩子说话...';
+                
+                // 3秒后隐藏结果
+                setTimeout(() => {
+                    document.getElementById('parentResult').style.display = 'none';
+                    document.getElementById('parentInput').value = '';
+                }, 3000);
+            }, 500);
         }
 
         // 选择主题
         function selectTopic(type, title) {
-            let language = '';
-            if (type === 'oral') {
-                language = document.getElementById('oralLanguage').value;
-                const languageNames = {
-                    'en': '英语',
-                    'ko': '韩语',
-                    'ja': '日语',
-                    'fr': '法语',
-                    'de': '德语',
-                    'es': '西班牙语'
-                };
-                language = languageNames[language];
-            }
-            
             // 这里应该发送指令到线下玩偶
-            console.log(`选择${type}主题: ${title}${language ? ` (${language})` : ''}`);
-            const message = language 
-                ? `已选择：${title}\n语言：${language}\n玩偶将开始讲述并和孩子展开对话`
-                : `已选择：${title}\n玩偶将开始讲述并和孩子展开对话`;
-            alert(message);
+            console.log(`选择${type}主题: ${title}`);
+            alert(`已选择：${title}\n玩偶将开始讲述并和孩子展开对话`);
             
             // 更新统计数据
             updateStats(type);
@@ -537,37 +736,98 @@
 
         // 更新统计数据
         function updateStats(type) {
-            const counts = {
-                oral: parseInt(document.getElementById('oralCount').textContent) || 0,
-                math: parseInt(document.getElementById('mathCount').textContent) || 0,
-                story: parseInt(document.getElementById('storyCount').textContent) || 0
-            };
+            // 获取历史记录
+            let records = JSON.parse(localStorage.getItem('growthRecords') || '[]');
             
-            counts[type]++;
+            // 添加新记录
+            records.push({
+                type: type,
+                timestamp: Date.now()
+            });
             
-            document.getElementById('oralCount').textContent = counts.oral;
-            document.getElementById('mathCount').textContent = counts.math;
-            document.getElementById('storyCount').textContent = counts.story;
+            // 保存记录
+            localStorage.setItem('growthRecords', JSON.stringify(records));
             
-            // 保存到localStorage
-            localStorage.setItem('growthStats', JSON.stringify(counts));
+            // 重新计算并显示统计
+            filterStats();
         }
 
-        // 页面加载时恢复统计数据
-        window.addEventListener('DOMContentLoaded', function() {
-            const savedStats = localStorage.getItem('growthStats');
-            if (savedStats) {
-                const stats = JSON.parse(savedStats);
-                document.getElementById('oralCount').textContent = stats.oral || 0;
-                document.getElementById('mathCount').textContent = stats.math || 0;
-                document.getElementById('storyCount').textContent = stats.story || 0;
+        // 根据时间筛选统计数据
+        function filterStats() {
+            const filterValue = document.getElementById('timeFilter').value;
+            const now = Date.now();
+            let startTime = 0;
+            
+            // 计算起始时间
+            if (filterValue === '1') {
+                // 今天：当天0点开始
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                startTime = today.getTime();
+            } else if (filterValue === '7') {
+                // 近7天
+                startTime = now - 7 * 24 * 60 * 60 * 1000;
+            } else if (filterValue === '30') {
+                // 近30天
+                startTime = now - 30 * 24 * 60 * 60 * 1000;
+            } else {
+                // 全部
+                startTime = 0;
             }
             
-            // 恢复语言设置
-            const savedLanguage = localStorage.getItem('oralLanguage');
-            if (savedLanguage) {
-                document.getElementById('oralLanguage').value = savedLanguage;
+            // 获取记录并过滤
+            const records = JSON.parse(localStorage.getItem('growthRecords') || '[]');
+            const filteredRecords = records.filter(record => record.timestamp >= startTime);
+            
+            // 统计各类型数量
+            const counts = {
+                oral: 0,
+                habit: 0,
+                math: 0,
+                story: 0
+            };
+            
+            filteredRecords.forEach(record => {
+                if (counts.hasOwnProperty(record.type)) {
+                    counts[record.type]++;
+                }
+            });
+            
+            // 更新显示
+            document.getElementById('oralCount').textContent = counts.oral;
+            document.getElementById('habitCount').textContent = counts.habit;
+            document.getElementById('mathCount').textContent = counts.math;
+            document.getElementById('storyCount').textContent = counts.story;
+        }
+
+        // 页面加载时显示统计数据
+        window.addEventListener('DOMContentLoaded', function() {
+            // 首次加载，如果有旧的统计数据（counts格式），迁移到新的记录格式
+            const oldStats = localStorage.getItem('growthStats');
+            const records = localStorage.getItem('growthRecords');
+            
+            if (oldStats && !records) {
+                // 迁移旧数据：将旧的计数转换为记录（使用当前时间）
+                const stats = JSON.parse(oldStats);
+                const migratedRecords = [];
+                const now = Date.now();
+                
+                // 为每个旧计数创建记录
+                ['oral', 'habit', 'math', 'story'].forEach(type => {
+                    const count = stats[type] || 0;
+                    for (let i = 0; i < count; i++) {
+                        migratedRecords.push({
+                            type: type,
+                            timestamp: now - (count - i) * 60000 // 每条记录间隔1分钟
+                        });
+                    }
+                });
+                
+                localStorage.setItem('growthRecords', JSON.stringify(migratedRecords));
             }
+            
+            // 应用当前筛选器并显示统计
+            filterStats();
         });
     </script>
 </body>
