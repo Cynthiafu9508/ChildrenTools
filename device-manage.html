@@ -607,11 +607,31 @@
         // 设备解绑
         function unbindDevice() {
             if (confirm('确定要解绑设备吗？解绑后需要重新配网才能使用。')) {
-                // 清除设备数据
-                localStorage.removeItem('devicePaired');
-                alert('设备已解绑');
-                // 返回我的页面
-                window.location.href = 'mine.html';
+                const deviceList = getDeviceList();
+                const currentDeviceId = getCurrentDeviceId();
+                
+                // 从设备列表中删除当前设备
+                const filteredList = deviceList.filter(d => d.id !== currentDeviceId);
+                
+                if (filteredList.length > 0) {
+                    // 如果还有其他设备，切换到第一个设备
+                    localStorage.setItem('deviceList', JSON.stringify(filteredList));
+                    const newCurrentDevice = filteredList[0];
+                    localStorage.setItem('currentDeviceId', newCurrentDevice.id);
+                    localStorage.setItem('deviceId', newCurrentDevice.id);
+                    
+                    // 刷新页面以显示新设备
+                    window.location.reload();
+                } else {
+                    // 如果没有设备了，清除所有设备数据
+                    localStorage.removeItem('deviceList');
+                    localStorage.removeItem('currentDeviceId');
+                    localStorage.removeItem('deviceId');
+                    localStorage.removeItem('devicePaired');
+                    alert('设备已解绑');
+                    // 返回首页
+                    window.location.href = 'pairing-set.html';
+                }
             }
         }
 
@@ -621,7 +641,13 @@
         // 编辑玩偶昵称
         function editDollNickname() {
             currentEditType = 'dollNickname';
-            const currentValue = localStorage.getItem('dollNickname') || '噜噜';
+            
+            // 从当前设备中获取昵称
+            const deviceList = getDeviceList();
+            const currentDeviceId = getCurrentDeviceId();
+            const currentDevice = deviceList.find(d => d.id === currentDeviceId);
+            const currentValue = currentDevice ? (currentDevice.dollNickname || currentDevice.name || '噜噜') : '噜噜';
+            
             document.getElementById('inputModalTitle').textContent = '玩偶昵称';
             document.getElementById('inputField').value = currentValue;
             document.getElementById('inputField').placeholder = '请输入玩偶昵称';
@@ -643,17 +669,19 @@
             const value = document.getElementById('inputField').value.trim();
             if (currentEditType === 'dollNickname') {
                 const nickname = value || '噜噜';
-                localStorage.setItem('dollNickname', nickname);
-                document.getElementById('dollNickname').textContent = nickname;
                 
-                // 更新设备列表中的当前设备名称
+                // 更新设备列表中的当前设备昵称
                 const deviceList = getDeviceList();
                 const currentDeviceId = getCurrentDeviceId();
                 const currentDevice = deviceList.find(d => d.id === currentDeviceId);
                 if (currentDevice) {
                     currentDevice.name = nickname;
+                    currentDevice.dollNickname = nickname;
                     localStorage.setItem('deviceList', JSON.stringify(deviceList));
                 }
+                
+                // 更新页面显示
+                document.getElementById('dollNickname').textContent = nickname;
                 
                 // 如果设备列表弹窗是打开的，重新渲染
                 const modal = document.getElementById('deviceListModal');
@@ -684,28 +712,43 @@
                 }
             }
 
-            // 恢复设备ID
-            const savedDeviceId = localStorage.getItem('deviceId');
-            if (savedDeviceId) {
-                document.getElementById('deviceId').textContent = 'ID: ' + savedDeviceId;
+            // 恢复设备ID和电量将在设备信息恢复时一起处理
+
+            // 恢复当前设备信息
+            const deviceList = getDeviceList();
+            
+            if (deviceList.length === 0) {
+                // 如果没有设备，跳转到首页
+                alert('请先绑定设备');
+                window.location.href = 'pairing-set.html';
+                return;
             }
-
-            // 恢复电量（模拟数据）
-            const batteryLevel = localStorage.getItem('batteryLevel') || 80;
-            updateBattery(batteryLevel);
-
-            // 恢复音量
-            const volume = localStorage.getItem('deviceVolume') || 50;
-            document.getElementById('volumeSlider').value = volume;
-            document.getElementById('volumeText').textContent = volume + '%';
-
-            // 恢复玩偶昵称
-            const dollNickname = localStorage.getItem('dollNickname');
-            if (dollNickname) {
+            
+            const currentDeviceId = getCurrentDeviceId();
+            const currentDevice = deviceList.find(d => d.id === currentDeviceId) || deviceList[0];
+            
+            if (currentDevice) {
+                // 如果当前设备ID不存在，设置为第一个设备
+                if (!currentDeviceId || !deviceList.find(d => d.id === currentDeviceId)) {
+                    localStorage.setItem('currentDeviceId', currentDevice.id);
+                    localStorage.setItem('deviceId', currentDevice.id);
+                }
+                
+                // 恢复音量
+                const volume = currentDevice.volume || 50;
+                document.getElementById('volumeSlider').value = volume;
+                document.getElementById('volumeText').textContent = volume + '%';
+                
+                // 恢复电量
+                const batteryLevel = currentDevice.batteryLevel || 80;
+                updateBattery(batteryLevel);
+                
+                // 恢复玩偶昵称（从当前设备中获取）
+                const dollNickname = currentDevice.dollNickname || currentDevice.name || '噜噜';
                 document.getElementById('dollNickname').textContent = dollNickname;
-            } else {
-                // 设置默认昵称
-                document.getElementById('dollNickname').textContent = '噜噜';
+                
+                // 恢复设备ID显示
+                document.getElementById('deviceId').textContent = 'ID: ' + currentDevice.id;
             }
         });
 
@@ -727,7 +770,17 @@
 
         // 保存音量设置
         document.getElementById('volumeSlider').addEventListener('change', function() {
-            localStorage.setItem('deviceVolume', this.value);
+            const volume = parseInt(this.value);
+            localStorage.setItem('deviceVolume', volume);
+            
+            // 同时保存到当前设备对象中
+            const deviceList = getDeviceList();
+            const currentDeviceId = getCurrentDeviceId();
+            const currentDevice = deviceList.find(d => d.id === currentDeviceId);
+            if (currentDevice) {
+                currentDevice.volume = volume;
+                localStorage.setItem('deviceList', JSON.stringify(deviceList));
+            }
         });
 
         // 获取设备列表
@@ -736,24 +789,24 @@
             if (deviceListStr) {
                 return JSON.parse(deviceListStr);
             }
-            // 如果没有设备列表，创建默认设备
-            const dollNickname = localStorage.getItem('dollNickname') || '噜噜';
-            const defaultDevice = {
-                id: '9C284003504A',
-                name: dollNickname,
-                avatar: '',
-                batteryLevel: 80,
-                volume: 50
-            };
-            const deviceList = [defaultDevice];
-            localStorage.setItem('deviceList', JSON.stringify(deviceList));
-            localStorage.setItem('currentDeviceId', defaultDevice.id);
-            return deviceList;
+            // 如果没有设备列表，返回空数组（设备需要通过配网流程添加）
+            return [];
         }
 
         // 获取当前设备ID
         function getCurrentDeviceId() {
-            return localStorage.getItem('currentDeviceId') || '9C284003504A';
+            const currentId = localStorage.getItem('currentDeviceId');
+            if (currentId) {
+                return currentId;
+            }
+            // 如果没有当前设备ID，尝试从设备列表中获取第一个设备
+            const deviceList = getDeviceList();
+            if (deviceList.length > 0) {
+                const firstDeviceId = deviceList[0].id;
+                localStorage.setItem('currentDeviceId', firstDeviceId);
+                return firstDeviceId;
+            }
+            return null;
         }
 
         // 显示设备列表
@@ -778,9 +831,6 @@
             const currentDeviceId = getCurrentDeviceId();
             const container = document.getElementById('deviceListContainer');
             
-            // 获取当前设备的玩偶昵称
-            const dollNickname = localStorage.getItem('dollNickname') || '噜噜';
-            
             container.innerHTML = '';
             
             deviceList.forEach(device => {
@@ -789,8 +839,8 @@
                 deviceItem.className = 'device-list-item' + (isActive ? ' active' : '');
                 deviceItem.onclick = () => switchDevice(device.id);
                 
-                // 当前设备使用玩偶昵称，其他设备使用设备名称或默认值
-                const displayName = isActive ? dollNickname : (device.name || '小AI');
+                // 使用设备自己的玩偶昵称
+                const displayName = device.dollNickname || device.name || '噜噜';
                 
                 deviceItem.innerHTML = `
                     <div class="device-item-info">
@@ -815,14 +865,21 @@
             if (device) {
                 localStorage.setItem('currentDeviceId', deviceId);
                 localStorage.setItem('deviceId', deviceId);
-                localStorage.setItem('deviceVolume', device.volume || 50);
-                localStorage.setItem('batteryLevel', device.batteryLevel || 80);
                 
                 // 更新页面显示
                 document.getElementById('deviceId').textContent = 'ID: ' + deviceId;
-                document.getElementById('volumeSlider').value = device.volume || 50;
-                document.getElementById('volumeText').textContent = (device.volume || 50) + '%';
+                
+                // 恢复音量
+                const volume = device.volume || 50;
+                document.getElementById('volumeSlider').value = volume;
+                document.getElementById('volumeText').textContent = volume + '%';
+                
+                // 恢复电量
                 updateBattery(device.batteryLevel || 80);
+                
+                // 恢复玩偶昵称
+                const dollNickname = device.dollNickname || device.name || '噜噜';
+                document.getElementById('dollNickname').textContent = dollNickname;
                 
                 // 更新设备头像
                 if (device.avatar) {
@@ -843,20 +900,6 @@
             }
         }
 
-        // 页面加载时初始化设备列表（如果没有）
-        window.addEventListener('DOMContentLoaded', function() {
-            // 确保有设备列表
-            getDeviceList();
-            
-            // 恢复设备信息
-            const currentDeviceId = getCurrentDeviceId();
-            const deviceList = getDeviceList();
-            const currentDevice = deviceList.find(d => d.id === currentDeviceId) || deviceList[0];
-            
-            if (currentDevice) {
-                document.getElementById('deviceId').textContent = 'ID: ' + currentDevice.id;
-            }
-        });
     </script>
 </body>
 </html>

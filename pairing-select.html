@@ -831,6 +831,38 @@
             
             button.onclick = function() {
                 document.getElementById('statusModal').classList.remove('show');
+                
+                // 获取设备信息
+                const deviceIdElement = document.querySelector('#deviceCard .device-id');
+                const deviceNameElement = document.querySelector('#deviceCard .device-name');
+                
+                let deviceId = '9C284003504A'; // 默认ID
+                let deviceName = 'JZ-YDT-01'; // 默认名称
+                
+                if (deviceIdElement) {
+                    const idText = deviceIdElement.textContent;
+                    const idMatch = idText.match(/ID:\s*(.+)/);
+                    if (idMatch) {
+                        deviceId = idMatch[1].trim();
+                    }
+                }
+                
+                if (deviceNameElement) {
+                    const nameText = deviceNameElement.textContent;
+                    const nameMatch = nameText.match(/设备名称:\s*(.+)/);
+                    if (nameMatch) {
+                        deviceName = nameMatch[1].trim();
+                    }
+                }
+                
+                // 如果设备ID为空，生成一个唯一ID
+                if (!deviceId || deviceId === '9C284003504A') {
+                    deviceId = 'DEVICE_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                }
+                
+                // 添加设备到设备列表
+                addDeviceToList(deviceId, deviceName);
+                
                 // 设置配网完成状态
                 localStorage.setItem('devicePaired', 'true');
                 
@@ -854,6 +886,46 @@
             } else {
                 window.location.href = 'pairing-set.html?paired=true';
             }
+        }
+
+        // 添加设备到设备列表
+        function addDeviceToList(deviceId, deviceName) {
+            // 获取现有设备列表
+            let deviceList = [];
+            const deviceListStr = localStorage.getItem('deviceList');
+            if (deviceListStr) {
+                deviceList = JSON.parse(deviceListStr);
+            }
+            
+            // 检查设备是否已存在
+            const existingDevice = deviceList.find(d => d.id === deviceId);
+            
+            if (existingDevice) {
+                // 如果设备已存在，更新信息并设置为当前设备
+                existingDevice.deviceName = deviceName;
+                existingDevice.batteryLevel = existingDevice.batteryLevel || 80;
+                existingDevice.volume = existingDevice.volume || 50;
+            } else {
+                // 如果设备不存在，添加新设备
+                const dollNickname = localStorage.getItem('dollNickname') || '噜噜';
+                const newDevice = {
+                    id: deviceId,
+                    name: dollNickname, // 使用当前玩偶昵称作为设备名称
+                    deviceName: deviceName, // 保存原始设备名称
+                    avatar: '',
+                    batteryLevel: 80,
+                    volume: 50,
+                    dollNickname: dollNickname // 为每个设备存储独立的玩偶昵称
+                };
+                deviceList.push(newDevice);
+            }
+            
+            // 保存设备列表
+            localStorage.setItem('deviceList', JSON.stringify(deviceList));
+            
+            // 设置当前设备
+            localStorage.setItem('currentDeviceId', deviceId);
+            localStorage.setItem('deviceId', deviceId);
         }
 
         // 显示用户信息填写弹窗

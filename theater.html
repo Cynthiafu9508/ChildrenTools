@@ -564,8 +564,14 @@
 
         // 检查设备绑定状态
         function checkDevicePaired() {
-            const isPaired = localStorage.getItem('devicePaired') === 'true';
-            if (!isPaired) {
+            const deviceListStr = localStorage.getItem('deviceList');
+            let hasDevices = false;
+            if (deviceListStr) {
+                const deviceList = JSON.parse(deviceListStr);
+                hasDevices = deviceList.length > 0;
+            }
+            
+            if (!hasDevices) {
                 // 显示睡眠状态
                 document.querySelector('.content').innerHTML = `
                     <div class="sleep-container">

@@ -420,14 +420,24 @@
     </div>
 
     <script>
+        // 检查是否有设备
+        function hasDevice() {
+            const deviceListStr = localStorage.getItem('deviceList');
+            if (deviceListStr) {
+                const deviceList = JSON.parse(deviceListStr);
+                return deviceList.length > 0;
+            }
+            return false;
+        }
+
         // 检查配网状态
         function checkPairingStatus() {
             const dollImage = document.getElementById('dollImage');
             const sleepText = document.getElementById('sleepText');
-            const isPaired = localStorage.getItem('devicePaired') === 'true';
+            const hasDevices = hasDevice();
             
-            if (isPaired) {
-                // 配网完成 - 清醒跳跃状态
+            if (hasDevices) {
+                // 有设备 - 清醒跳跃状态
                 dollImage.classList.remove('sleep');
                 dollImage.classList.add('awake');
                 dollImage.innerHTML = '🤖';
@@ -435,7 +445,7 @@
                     sleepText.style.display = 'none';
                 }
             } else {
-                // 未配网 - 睡眠状态
+                // 无设备 - 睡眠状态
                 dollImage.classList.remove('awake');
                 dollImage.classList.add('sleep');
                 dollImage.innerHTML = '😴';
@@ -463,8 +473,8 @@
 
         // 处理设备管理按钮点击
         function handleDeviceManage() {
-            const isPaired = localStorage.getItem('devicePaired') === 'true';
-            if (!isPaired) {
+            const hasDevices = hasDevice();
+            if (!hasDevices) {
                 // 显示提示弹窗
                 document.getElementById('tipModal').classList.add('show');
             } else {
