@@ -50,8 +50,94 @@
             font-weight: 600;
         }
 
+        .header {
+            height: 44px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            position: relative;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .header-right {
+            position: absolute;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .device-manage-btn, .add-partner-btn {
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .device-manage-btn:hover, .add-partner-btn:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        /* 提示弹窗 */
+        .tip-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tip-modal.show {
+            display: flex;
+        }
+
+        .tip-modal-content {
+            width: 280px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .tip-modal-text {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .tip-modal-btn {
+            width: 100%;
+            height: 44px;
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            border-radius: 22px;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .tip-modal-btn:hover {
+            opacity: 0.9;
+        }
+
         .page-container {
-            height: calc(100% - 44px - 50px);
+            height: calc(100% - 44px - 44px - 50px);
             overflow-y: auto;
             background: #f8f8f8;
         }
@@ -177,6 +263,17 @@
             width: 100%;
         }
 
+        .sleep-text {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            white-space: nowrap;
+        }
+
         .doll-image {
             width: 100%;
             height: 100%;
@@ -252,19 +349,20 @@
                 <span>🔋 100%</span>
             </div>
             
+            <div class="header">
+                <div class="header-right">
+                    <div class="add-partner-btn" onclick="window.location.href='pairing-guide.html'" title="添加伙伴">+</div>
+                    <div class="device-manage-btn" onclick="handleDeviceManage()" title="设备管理">⚙️</div>
+                </div>
+            </div>
+            
             <div class="page-container">
                 <!-- 伙伴 -->
                 <div class="page active partner-page" id="home">
                     <div class="doll-container">
                         <div class="doll-image" id="dollImage">🧸</div>
                     </div>
-                    <div class="partner-actions">
-                        <div class="add-button" onclick="window.location.href='pairing-guide.html'">
-                            <span class="add-button-icon">+</span>
-                            <span>添加伙伴</span>
-                        </div>
-                        <div class="pairing-tip">请确保设备已开机，且蓝牙处于打开状态。</div>
-                    </div>
+                    <div class="sleep-text" id="sleepText" style="display: none;">请先绑定设备</div>
                 </div>
 
                 <!-- 剧场 -->
@@ -310,6 +408,14 @@
                     <div class="nav-text">我的</div>
                 </div>
             </div>
+
+            <!-- 提示弹窗 -->
+            <div class="tip-modal" id="tipModal" onclick="closeTipModal(event)">
+                <div class="tip-modal-content" onclick="event.stopPropagation()">
+                    <div class="tip-modal-text">请绑定设备</div>
+                    <button class="tip-modal-btn" onclick="closeTipModal()">确定</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -317,6 +423,7 @@
         // 检查配网状态
         function checkPairingStatus() {
             const dollImage = document.getElementById('dollImage');
+            const sleepText = document.getElementById('sleepText');
             const isPaired = localStorage.getItem('devicePaired') === 'true';
             
             if (isPaired) {
@@ -324,11 +431,17 @@
                 dollImage.classList.remove('sleep');
                 dollImage.classList.add('awake');
                 dollImage.innerHTML = '🤖';
+                if (sleepText) {
+                    sleepText.style.display = 'none';
+                }
             } else {
                 // 未配网 - 睡眠状态
                 dollImage.classList.remove('awake');
                 dollImage.classList.add('sleep');
                 dollImage.innerHTML = '😴';
+                if (sleepText) {
+                    sleepText.style.display = 'block';
+                }
             }
         }
 
@@ -347,6 +460,26 @@
 
         // 页面加载时检查状态
         checkUrlParams();
+
+        // 处理设备管理按钮点击
+        function handleDeviceManage() {
+            const isPaired = localStorage.getItem('devicePaired') === 'true';
+            if (!isPaired) {
+                // 显示提示弹窗
+                document.getElementById('tipModal').classList.add('show');
+            } else {
+                // 跳转到设备管理页面
+                window.location.href = 'device-manage.html';
+            }
+        }
+
+        // 关闭提示弹窗
+        function closeTipModal(event) {
+            if (event && event.target !== event.currentTarget) {
+                return;
+            }
+            document.getElementById('tipModal').classList.remove('show');
+        }
 
         // 导航栏切换
         document.querySelectorAll('.nav-item').forEach(item => {

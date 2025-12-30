@@ -56,6 +56,7 @@
             align-items: center;
             padding: 0 20px;
             color: #fff;
+            position: relative;
         }
 
         .back-button {
@@ -73,6 +74,29 @@
             text-align: center;
             font-size: 18px;
             font-weight: 500;
+        }
+
+        .header-right {
+            position: absolute;
+            right: 20px;
+        }
+
+        .switch-device-btn {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .switch-device-btn:hover {
+            background: rgba(255,255,255,0.2);
         }
 
         .content {
@@ -262,6 +286,207 @@
             font-size: 16px;
             color: #999;
         }
+
+        /* 设备列表弹窗 */
+        .device-list-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            align-items: flex-end;
+        }
+
+        .device-list-modal.show {
+            display: flex;
+        }
+
+        .device-list-content {
+            width: 100%;
+            background: #2a2a3e;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .device-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .device-list-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .device-list-close {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 20px;
+            text-align: center;
+            line-height: 24px;
+            color: #fff;
+        }
+
+        .device-list-item {
+            background: #3a3a4e;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .device-list-item:hover {
+            background: #4a4a5e;
+        }
+
+        .device-list-item.active {
+            background: #FF8C42;
+        }
+
+        .device-item-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .device-item-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .device-item-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .device-item-name {
+            font-size: 15px;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .device-item-id {
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .device-item-check {
+            font-size: 18px;
+            color: #fff;
+        }
+
+        /* 输入弹窗 */
+        .input-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-modal.show {
+            display: flex;
+        }
+
+        .input-modal-content {
+            width: 320px;
+            background: #2a2a3e;
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .input-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .input-modal-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .input-modal-close {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 20px;
+            text-align: center;
+            line-height: 24px;
+            color: #fff;
+        }
+
+        .input-modal-body {
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a2e;
+            border: 1px solid #3a3a4e;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input-field:focus {
+            border-color: #FF8C42;
+        }
+
+        .input-modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .input-modal-btn-cancel {
+            background: #3a3a4e;
+            color: #fff;
+        }
+
+        .input-modal-btn-save {
+            background: #FF8C42;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -273,9 +498,11 @@
             </div>
             
             <div class="header">
-                <div class="back-button" onclick="window.location.href='mine.html'">←</div>
+                <div class="back-button" onclick="window.location.href='pairing-set.html'">←</div>
                 <div class="header-title">设备管理</div>
-                <div style="width: 32px;"></div>
+                <div class="header-right">
+                    <div class="switch-device-btn" onclick="showDeviceList()">⇄</div>
+                </div>
             </div>
 
             <div class="content">
@@ -284,8 +511,17 @@
                         <img id="deviceAvatarImg" src="" alt="设备头像" style="display: none;">
                         <span id="deviceAvatarPlaceholder">🤖</span>
                     </div>
-                    <div class="device-name">小AI</div>
                     <div class="device-id" id="deviceId">ID: 9C284003504A</div>
+                </div>
+
+                <div class="device-info-section">
+                    <div class="device-info-item" onclick="editDollNickname()" style="cursor: pointer;">
+                        <div class="device-info-label">玩偶昵称</div>
+                        <div class="device-info-value">
+                            <span id="dollNickname">噜噜</span>
+                            <span class="arrow-icon">></span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="device-info-section">
@@ -326,6 +562,37 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 设备列表弹窗 -->
+            <div class="device-list-modal" id="deviceListModal" onclick="closeDeviceList(event)">
+                <div class="device-list-content" onclick="event.stopPropagation()">
+                    <div class="device-list-header">
+                        <div class="device-list-title">切换设备</div>
+                        <div class="device-list-close" onclick="closeDeviceList()">×</div>
+                    </div>
+                    <div id="deviceListContainer">
+                        <!-- 设备列表将动态生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 输入弹窗 -->
+            <div class="input-modal" id="inputModal" onclick="closeInputModal(event)">
+                <div class="input-modal-content" onclick="event.stopPropagation()">
+                    <div class="input-modal-header">
+                        <div class="input-modal-title" id="inputModalTitle">编辑</div>
+                        <div class="input-modal-close" onclick="closeInputModal()">×</div>
+                    </div>
+                    <div class="input-modal-body">
+                        <input type="text" class="input-field" id="inputField" placeholder="请输入" maxlength="20">
+                    </div>
+                    <div class="input-modal-buttons">
+                        <button class="input-modal-btn input-modal-btn-cancel" onclick="closeInputModal()">取消</button>
+                        <button class="input-modal-btn input-modal-btn-save" onclick="saveInput()">保存</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -346,6 +613,55 @@
                 // 返回我的页面
                 window.location.href = 'mine.html';
             }
+        }
+
+        // 当前编辑类型
+        let currentEditType = '';
+
+        // 编辑玩偶昵称
+        function editDollNickname() {
+            currentEditType = 'dollNickname';
+            const currentValue = localStorage.getItem('dollNickname') || '噜噜';
+            document.getElementById('inputModalTitle').textContent = '玩偶昵称';
+            document.getElementById('inputField').value = currentValue;
+            document.getElementById('inputField').placeholder = '请输入玩偶昵称';
+            document.getElementById('inputModal').classList.add('show');
+            document.getElementById('inputField').focus();
+        }
+
+        // 关闭输入弹窗
+        function closeInputModal(event) {
+            if (event && event.target !== event.currentTarget) {
+                return;
+            }
+            document.getElementById('inputModal').classList.remove('show');
+            currentEditType = '';
+        }
+
+        // 保存输入
+        function saveInput() {
+            const value = document.getElementById('inputField').value.trim();
+            if (currentEditType === 'dollNickname') {
+                const nickname = value || '噜噜';
+                localStorage.setItem('dollNickname', nickname);
+                document.getElementById('dollNickname').textContent = nickname;
+                
+                // 更新设备列表中的当前设备名称
+                const deviceList = getDeviceList();
+                const currentDeviceId = getCurrentDeviceId();
+                const currentDevice = deviceList.find(d => d.id === currentDeviceId);
+                if (currentDevice) {
+                    currentDevice.name = nickname;
+                    localStorage.setItem('deviceList', JSON.stringify(deviceList));
+                }
+                
+                // 如果设备列表弹窗是打开的，重新渲染
+                const modal = document.getElementById('deviceListModal');
+                if (modal.classList.contains('show')) {
+                    renderDeviceList();
+                }
+            }
+            closeInputModal();
         }
 
         // 页面加载时恢复设备信息
@@ -382,6 +698,15 @@
             const volume = localStorage.getItem('deviceVolume') || 50;
             document.getElementById('volumeSlider').value = volume;
             document.getElementById('volumeText').textContent = volume + '%';
+
+            // 恢复玩偶昵称
+            const dollNickname = localStorage.getItem('dollNickname');
+            if (dollNickname) {
+                document.getElementById('dollNickname').textContent = dollNickname;
+            } else {
+                // 设置默认昵称
+                document.getElementById('dollNickname').textContent = '噜噜';
+            }
         });
 
         // 更新电量显示
@@ -403,6 +728,134 @@
         // 保存音量设置
         document.getElementById('volumeSlider').addEventListener('change', function() {
             localStorage.setItem('deviceVolume', this.value);
+        });
+
+        // 获取设备列表
+        function getDeviceList() {
+            const deviceListStr = localStorage.getItem('deviceList');
+            if (deviceListStr) {
+                return JSON.parse(deviceListStr);
+            }
+            // 如果没有设备列表，创建默认设备
+            const dollNickname = localStorage.getItem('dollNickname') || '噜噜';
+            const defaultDevice = {
+                id: '9C284003504A',
+                name: dollNickname,
+                avatar: '',
+                batteryLevel: 80,
+                volume: 50
+            };
+            const deviceList = [defaultDevice];
+            localStorage.setItem('deviceList', JSON.stringify(deviceList));
+            localStorage.setItem('currentDeviceId', defaultDevice.id);
+            return deviceList;
+        }
+
+        // 获取当前设备ID
+        function getCurrentDeviceId() {
+            return localStorage.getItem('currentDeviceId') || '9C284003504A';
+        }
+
+        // 显示设备列表
+        function showDeviceList() {
+            const modal = document.getElementById('deviceListModal');
+            modal.classList.add('show');
+            renderDeviceList();
+        }
+
+        // 关闭设备列表
+        function closeDeviceList(event) {
+            if (event && event.target !== event.currentTarget) {
+                return;
+            }
+            const modal = document.getElementById('deviceListModal');
+            modal.classList.remove('show');
+        }
+
+        // 渲染设备列表
+        function renderDeviceList() {
+            const deviceList = getDeviceList();
+            const currentDeviceId = getCurrentDeviceId();
+            const container = document.getElementById('deviceListContainer');
+            
+            // 获取当前设备的玩偶昵称
+            const dollNickname = localStorage.getItem('dollNickname') || '噜噜';
+            
+            container.innerHTML = '';
+            
+            deviceList.forEach(device => {
+                const isActive = device.id === currentDeviceId;
+                const deviceItem = document.createElement('div');
+                deviceItem.className = 'device-list-item' + (isActive ? ' active' : '');
+                deviceItem.onclick = () => switchDevice(device.id);
+                
+                // 当前设备使用玩偶昵称，其他设备使用设备名称或默认值
+                const displayName = isActive ? dollNickname : (device.name || '小AI');
+                
+                deviceItem.innerHTML = `
+                    <div class="device-item-info">
+                        <div class="device-item-avatar">${device.avatar || '🤖'}</div>
+                        <div class="device-item-details">
+                            <div class="device-item-name">${displayName}</div>
+                            <div class="device-item-id">ID: ${device.id}</div>
+                        </div>
+                    </div>
+                    ${isActive ? '<div class="device-item-check">✓</div>' : ''}
+                `;
+                
+                container.appendChild(deviceItem);
+            });
+        }
+
+        // 切换设备
+        function switchDevice(deviceId) {
+            const deviceList = getDeviceList();
+            const device = deviceList.find(d => d.id === deviceId);
+            
+            if (device) {
+                localStorage.setItem('currentDeviceId', deviceId);
+                localStorage.setItem('deviceId', deviceId);
+                localStorage.setItem('deviceVolume', device.volume || 50);
+                localStorage.setItem('batteryLevel', device.batteryLevel || 80);
+                
+                // 更新页面显示
+                document.getElementById('deviceId').textContent = 'ID: ' + deviceId;
+                document.getElementById('volumeSlider').value = device.volume || 50;
+                document.getElementById('volumeText').textContent = (device.volume || 50) + '%';
+                updateBattery(device.batteryLevel || 80);
+                
+                // 更新设备头像
+                if (device.avatar) {
+                    const avatarImg = document.getElementById('deviceAvatarImg');
+                    const avatarPlaceholder = document.getElementById('deviceAvatarPlaceholder');
+                    avatarImg.src = device.avatar;
+                    avatarImg.style.display = 'block';
+                    avatarPlaceholder.style.display = 'none';
+                } else {
+                    const avatarImg = document.getElementById('deviceAvatarImg');
+                    const avatarPlaceholder = document.getElementById('deviceAvatarPlaceholder');
+                    avatarImg.style.display = 'none';
+                    avatarPlaceholder.style.display = 'flex';
+                    avatarPlaceholder.textContent = '🤖';
+                }
+                
+                closeDeviceList();
+            }
+        }
+
+        // 页面加载时初始化设备列表（如果没有）
+        window.addEventListener('DOMContentLoaded', function() {
+            // 确保有设备列表
+            getDeviceList();
+            
+            // 恢复设备信息
+            const currentDeviceId = getCurrentDeviceId();
+            const deviceList = getDeviceList();
+            const currentDevice = deviceList.find(d => d.id === currentDeviceId) || deviceList[0];
+            
+            if (currentDevice) {
+                document.getElementById('deviceId').textContent = 'ID: ' + currentDevice.id;
+            }
         });
     </script>
 </body>

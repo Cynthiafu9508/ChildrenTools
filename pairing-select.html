@@ -370,6 +370,153 @@
             text-align: center;
             line-height: 50px;
         }
+
+        /* 用户信息表单样式 */
+        .user-info-form {
+            padding: 10px 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 50px;
+            background: #1a1a2e;
+            border: 1px solid #3a3a4e;
+            border-radius: 12px;
+            padding: 0 15px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #FF8C42;
+        }
+
+        .form-input::placeholder {
+            color: #666;
+        }
+
+        .form-select {
+            width: 100%;
+            height: 50px;
+            background: #1a1a2e;
+            border: 1px solid #3a3a4e;
+            border-radius: 12px;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .form-select:active {
+            border-color: #FF8C42;
+        }
+
+        .form-select-text {
+            flex: 1;
+        }
+
+        .form-select-text.placeholder {
+            color: #666;
+        }
+
+        .form-select-arrow {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .form-btn {
+            flex: 1;
+            height: 50px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.3s;
+        }
+
+        .form-btn-secondary {
+            background: #3a3a4e;
+            color: #fff;
+        }
+
+        .form-btn-secondary:hover {
+            opacity: 0.8;
+        }
+
+        .form-btn-primary {
+            background: #FF8C42;
+            color: #fff;
+        }
+
+        .form-btn-primary:hover {
+            opacity: 0.8;
+        }
+
+        .gender-options {
+            padding: 10px 0;
+        }
+
+        .gender-option {
+            padding: 15px;
+            background: #2a2a3e;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 16px;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .gender-option:hover {
+            background: #3a3a4e;
+        }
+
+        .gender-option:last-child {
+            margin-bottom: 0;
+        }
+
+        .birthday-input-group {
+            padding: 10px 0;
+        }
+
+        .birthday-input {
+            width: 100%;
+            height: 50px;
+            background: #1a1a2e;
+            border: 1px solid #3a3a4e;
+            border-radius: 12px;
+            padding: 0 15px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .birthday-input:focus {
+            border-color: #FF8C42;
+        }
     </style>
 </head>
 <body>
@@ -487,6 +634,64 @@
         <div class="status-icon loading" id="statusIcon">⏳</div>
         <div class="status-text" id="statusText">正在发送WiFi凭证...</div>
         <div class="status-button" id="statusButton" style="display: none;">完成</div>
+    </div>
+
+    <!-- 用户信息填写弹窗 -->
+    <div class="modal" id="userInfoModal">
+        <div class="modal-header">
+            <div class="modal-title">完善用户信息</div>
+            <div class="modal-close" id="userInfoModalClose">×</div>
+        </div>
+        <div class="user-info-form">
+            <div class="form-group">
+                <label class="form-label">昵称</label>
+                <input type="text" class="form-input" id="userNickname" placeholder="请输入昵称" maxlength="20">
+            </div>
+            <div class="form-group">
+                <label class="form-label">性别</label>
+                <div class="form-select" id="userGenderSelect">
+                    <span class="form-select-text" id="userGenderText">请选择</span>
+                    <span class="form-select-arrow">▼</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">生日</label>
+                <div class="form-select" id="userBirthdaySelect">
+                    <span class="form-select-text" id="userBirthdayText">请选择</span>
+                    <span class="form-select-arrow">▼</span>
+                </div>
+            </div>
+            <div class="form-buttons">
+                <button class="form-btn form-btn-secondary" id="userInfoSkip">稍后填写</button>
+                <button class="form-btn form-btn-primary" id="userInfoSave">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 性别选择弹窗 -->
+    <div class="modal" id="genderModal">
+        <div class="modal-header">
+            <div class="modal-title">选择性别</div>
+            <div class="modal-close" id="genderModalClose">×</div>
+        </div>
+        <div class="gender-options">
+            <div class="gender-option" data-gender="男">男</div>
+            <div class="gender-option" data-gender="女">女</div>
+        </div>
+    </div>
+
+    <!-- 生日选择弹窗 -->
+    <div class="modal" id="birthdayModal">
+        <div class="modal-header">
+            <div class="modal-title">选择生日</div>
+            <div class="modal-close" id="birthdayModalClose">×</div>
+        </div>
+        <div class="birthday-input-group">
+            <input type="date" class="birthday-input" id="birthdayInput">
+        </div>
+        <div class="form-buttons">
+            <button class="form-btn form-btn-primary" id="birthdayConfirm">确定</button>
+        </div>
     </div>
 
     <script>
@@ -626,19 +831,150 @@
             
             button.onclick = function() {
                 document.getElementById('statusModal').classList.remove('show');
-                // 设置配网完成状态并跳转
+                // 设置配网完成状态
                 localStorage.setItem('devicePaired', 'true');
                 
-                // 检查来源，决定跳转到哪个页面
+                // 直接跳转到设备管理页面
                 const urlParams = new URLSearchParams(window.location.search);
                 const from = urlParams.get('from');
                 if (from === 'device-manage') {
                     window.location.href = 'device-manage.html';
                 } else {
-                    window.location.href = 'pairing-set.html?paired=true';
+                    window.location.href = 'device-manage.html';
                 }
             };
         }
+
+        function navigateAfterPairing() {
+            // 检查来源，决定跳转到哪个页面
+            const urlParams = new URLSearchParams(window.location.search);
+            const from = urlParams.get('from');
+            if (from === 'device-manage') {
+                window.location.href = 'device-manage.html';
+            } else {
+                window.location.href = 'pairing-set.html?paired=true';
+            }
+        }
+
+        // 显示用户信息填写弹窗
+        function showUserInfoModal() {
+            // 恢复已保存的信息（如果有，使用与mine.html相同的key）
+            const savedNickname = localStorage.getItem('nickname');
+            const savedGender = localStorage.getItem('gender');
+            const savedBirthday = localStorage.getItem('birthday');
+            
+            if (savedNickname) {
+                document.getElementById('userNickname').value = savedNickname;
+            }
+            if (savedGender) {
+                document.getElementById('userGenderSelect').dataset.gender = savedGender;
+                document.getElementById('userGenderText').textContent = savedGender;
+                document.getElementById('userGenderText').classList.remove('placeholder');
+            }
+            if (savedBirthday) {
+                document.getElementById('userBirthdaySelect').dataset.birthday = savedBirthday;
+                // 格式化显示
+                const date = new Date(savedBirthday);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const formattedDate = `${year}年${month}月${day}日`;
+                document.getElementById('userBirthdayText').textContent = formattedDate;
+                document.getElementById('userBirthdayText').classList.remove('placeholder');
+                // 设置日期选择器的值
+                document.getElementById('birthdayInput').value = savedBirthday;
+            }
+            
+            // 设置日期选择器的最大值为今天
+            const today = new Date();
+            const maxDate = today.toISOString().split('T')[0];
+            document.getElementById('birthdayInput').setAttribute('max', maxDate);
+            
+            document.getElementById('userInfoModal').classList.add('show');
+        }
+
+        // 关闭用户信息弹窗
+        document.getElementById('userInfoModalClose').addEventListener('click', function() {
+            document.getElementById('userInfoModal').classList.remove('show');
+            navigateAfterPairing();
+        });
+
+        // 稍后填写按钮
+        document.getElementById('userInfoSkip').addEventListener('click', function() {
+            document.getElementById('userInfoModal').classList.remove('show');
+            navigateAfterPairing();
+        });
+
+        // 保存用户信息
+        document.getElementById('userInfoSave').addEventListener('click', function() {
+            const nickname = document.getElementById('userNickname').value.trim();
+            const gender = document.getElementById('userGenderSelect').dataset.gender || '';
+            const birthday = document.getElementById('userBirthdaySelect').dataset.birthday || '';
+
+            // 昵称必填
+            if (!nickname) {
+                alert('请输入昵称');
+                return;
+            }
+
+            // 保存到localStorage（与mine.html使用相同的key）
+            localStorage.setItem('nickname', nickname);
+            if (gender) {
+                localStorage.setItem('gender', gender);
+            }
+            if (birthday) {
+                localStorage.setItem('birthday', birthday);
+            }
+
+            // 关闭弹窗并跳转
+            document.getElementById('userInfoModal').classList.remove('show');
+            navigateAfterPairing();
+        });
+
+        // 性别选择
+        document.getElementById('userGenderSelect').addEventListener('click', function() {
+            document.getElementById('genderModal').classList.add('show');
+        });
+
+        document.getElementById('genderModalClose').addEventListener('click', function() {
+            document.getElementById('genderModal').classList.remove('show');
+        });
+
+        document.querySelectorAll('.gender-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const gender = this.dataset.gender;
+                document.getElementById('userGenderSelect').dataset.gender = gender;
+                document.getElementById('userGenderText').textContent = gender;
+                document.getElementById('userGenderText').classList.remove('placeholder');
+                document.getElementById('genderModal').classList.remove('show');
+            });
+        });
+
+        // 生日选择
+        document.getElementById('userBirthdaySelect').addEventListener('click', function() {
+            document.getElementById('birthdayModal').classList.add('show');
+        });
+
+        document.getElementById('birthdayModalClose').addEventListener('click', function() {
+            document.getElementById('birthdayModal').classList.remove('show');
+        });
+
+        document.getElementById('birthdayConfirm').addEventListener('click', function() {
+            const birthday = document.getElementById('birthdayInput').value;
+            if (birthday) {
+                // 格式化日期显示（YYYY-MM-DD -> YYYY年MM月DD日）
+                const date = new Date(birthday);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const formattedDate = `${year}年${month}月${day}日`;
+                
+                document.getElementById('userBirthdaySelect').dataset.birthday = birthday;
+                document.getElementById('userBirthdayText').textContent = formattedDate;
+                document.getElementById('userBirthdayText').classList.remove('placeholder');
+                document.getElementById('birthdayModal').classList.remove('show');
+            }
+        });
     </script>
         </div>
     </div>

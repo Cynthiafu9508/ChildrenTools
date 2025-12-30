@@ -332,6 +332,36 @@
         .nav-text {
             font-size: 11px;
         }
+
+        /* 睡眠状态样式 */
+        .sleep-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 200px);
+            min-height: 400px;
+        }
+
+        .sleep-icon {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            margin-bottom: 30px;
+            opacity: 0.6;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .sleep-text {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -532,9 +562,27 @@
             return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
         }
 
+        // 检查设备绑定状态
+        function checkDevicePaired() {
+            const isPaired = localStorage.getItem('devicePaired') === 'true';
+            if (!isPaired) {
+                // 显示睡眠状态
+                document.querySelector('.content').innerHTML = `
+                    <div class="sleep-container">
+                        <div class="sleep-icon">😴</div>
+                        <div class="sleep-text">请先绑定设备</div>
+                    </div>
+                `;
+                return false;
+            }
+            return true;
+        }
+
         // 页面加载时初始化
         window.addEventListener('DOMContentLoaded', function() {
-            initPage();
+            if (checkDevicePaired()) {
+                initPage();
+            }
         });
         
         // 页面显示时刷新（从视频播放页面返回时）

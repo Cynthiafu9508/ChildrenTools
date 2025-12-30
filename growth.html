@@ -69,6 +69,13 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .function-section:active {
+            transform: scale(0.98);
+            opacity: 0.8;
         }
 
         .function-header {
@@ -91,24 +98,6 @@
             font-size: 24px;
         }
 
-        .random-btn {
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
-            border-radius: 20px;
-            color: #fff;
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-            transition: opacity 0.3s;
-        }
-
-        .random-btn:hover {
-            opacity: 0.8;
-        }
-
-        .random-btn:active {
-            opacity: 0.6;
-        }
 
         .parent-input-section {
             display: flex;
@@ -207,104 +196,6 @@
         }
 
 
-
-        .options-list {
-            display: none;
-        }
-
-        .options-list.show {
-            display: block;
-        }
-
-        .option-item {
-            background: linear-gradient(135deg, #FFE5CC 0%, #FFF0E0 100%);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .option-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .option-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .option-title {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .option-desc {
-            font-size: 13px;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        .stats-section {
-            background: #fff;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .stats-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .stats-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .time-filter {
-            padding: 6px 12px;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #333;
-            cursor: pointer;
-            outline: none;
-        }
-
-        .time-filter:focus {
-            border-color: #FF8C42;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #FF8C42;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #999;
-        }
-
         .nav-bar {
             height: 50px;
             background: #fff;
@@ -343,6 +234,36 @@
         .nav-text {
             font-size: 11px;
         }
+
+        /* 睡眠状态样式 */
+        .sleep-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 200px);
+            min-height: 400px;
+        }
+
+        .sleep-icon {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            margin-bottom: 30px;
+            opacity: 0.6;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .sleep-text {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -357,111 +278,61 @@
                 <div class="page-title">成长</div>
 
                 <!-- 英语启蒙 -->
-                <div class="function-section">
+                <div class="function-section" onclick="selectTopic('oral', '英语启蒙')">
                     <div class="function-header">
                         <div class="function-title">
                             <span class="function-icon">🗣️</span>
                             <span>英语启蒙</span>
                         </div>
-                        <button class="random-btn" onclick="generateOralTopics()">随机生成主题</button>
-                    </div>
-                    <div class="options-list" id="oralOptions">
-                        <div class="option-item" onclick="selectTopic('oral', '日常问候')">
-                            <div class="option-title">日常问候</div>
-                            <div class="option-desc">学习基本的问候用语，如"你好"、"再见"等</div>
-                        </div>
-                        <div class="option-item" onclick="selectTopic('oral', '颜色认知')">
-                            <div class="option-title">颜色认知</div>
-                            <div class="option-desc">通过对话学习各种颜色的名称和表达</div>
-                        </div>
-                        <div class="option-item" onclick="selectTopic('oral', '动物世界')">
-                            <div class="option-title">动物世界</div>
-                            <div class="option-desc">认识各种动物，学习它们的名称和特征</div>
-                        </div>
                     </div>
                 </div>
 
-                <!-- 习惯养成 -->
-                <div class="function-section">
+                <!-- 百科知识 -->
+                <div class="function-section" onclick="selectTopic('knowledge', '百科知识')">
                     <div class="function-header">
                         <div class="function-title">
-                            <span class="function-icon">🌱</span>
-                            <span>习惯养成</span>
-                        </div>
-                        <button class="random-btn" onclick="generateHabitTopics()">随机生成主题</button>
-                    </div>
-                    <div class="options-list" id="habitOptions">
-                        <div class="option-item" onclick="selectTopic('habit', '早睡早起')">
-                            <div class="option-title">早睡早起</div>
-                            <div class="option-desc">培养健康的作息习惯</div>
-                        </div>
-                        <div class="option-item" onclick="selectTopic('habit', '整理玩具')">
-                            <div class="option-title">整理玩具</div>
-                            <div class="option-desc">学习收拾整理，培养责任感</div>
-                        </div>
-                        <div class="option-item" onclick="selectTopic('habit', '自己吃饭')">
-                            <div class="option-title">自己吃饭</div>
-                            <div class="option-desc">培养独立就餐的好习惯</div>
+                            <span class="function-icon">📚</span>
+                            <span>百科知识</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- 数感培养 -->
-                <div class="function-section">
+                <div class="function-section" onclick="selectTopic('math', '数感培养')">
                     <div class="function-header">
                         <div class="function-title">
                             <span class="function-icon">🔢</span>
                             <span>数感培养</span>
                         </div>
-                        <button class="random-btn" onclick="generateMathTopics()">随机生成主题</button>
-                    </div>
-                    <div class="options-list" id="mathOptions">
-                        <div class="option-item" onclick="selectTopic('math', '数数游戏')">
-                            <div class="option-title">数数游戏</div>
-                            <div class="option-desc">通过有趣的游戏学习1-10的数字</div>
-                        </div>
-                        <div class="option-item" onclick="selectTopic('math', '形状认知')">
-                            <div class="option-title">形状认知</div>
-                            <div class="option-desc">认识圆形、方形、三角形等基本形状</div>
-                        </div>
-                        <div class="option-item" onclick="selectTopic('math', '大小比较')">
-                            <div class="option-title">大小比较</div>
-                            <div class="option-desc">学习比较大小、多少等基本概念</div>
-                        </div>
                     </div>
                 </div>
 
                 <!-- 睡前故事 -->
-                <div class="function-section">
+                <div class="function-section" onclick="selectTopic('story', '睡前故事')">
                     <div class="function-header">
                         <div class="function-title">
                             <span class="function-icon">📖</span>
                             <span>睡前故事</span>
                         </div>
-                        <button class="random-btn" onclick="generateStories()">随机生成主题</button>
                     </div>
-                    <div class="options-list" id="storyOptions">
-                        <div class="option-item" onclick="selectTopic('story', '小兔子的冒险')">
-                            <div class="option-title">小兔子的冒险</div>
-                            <div class="option-desc">温暖治愈的睡前故事，帮助孩子安静入睡</div>
-                        </div>
-                        <div class="option-item" onclick="selectTopic('story', '星星的梦想')">
-                            <div class="option-title">星星的梦想</div>
-                            <div class="option-desc">充满想象力的故事，激发孩子的创造力</div>
-                        </div>
-                        <div class="option-item" onclick="selectTopic('story', '森林里的朋友')">
-                            <div class="option-title">森林里的朋友</div>
-                            <div class="option-desc">关于友谊和分享的温馨故事</div>
+                </div>
+
+                <!-- 诗词教学 -->
+                <div class="function-section" onclick="selectTopic('poetry', '诗词教学')">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">📝</span>
+                            <span>诗词教学</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 家长嘴替 -->
+                <!-- 自定义主题成长 -->
                 <div class="function-section">
                     <div class="function-header">
                         <div class="function-title">
                             <span class="function-icon">💬</span>
-                            <span>家长嘴替</span>
+                            <span>自定义主题成长</span>
                         </div>
                     </div>
                     <div class="parent-input-section">
@@ -482,37 +353,6 @@
                     <div class="result-section" id="parentResult" style="display: none;">
                         <div class="result-label">状态：</div>
                         <div class="result-content" id="parentResultContent"></div>
-                    </div>
-                </div>
-
-                <!-- 统计数据 -->
-                <div class="stats-section">
-                    <div class="stats-header">
-                        <div class="stats-title">互动统计</div>
-                        <select class="time-filter" id="timeFilter" onchange="filterStats()">
-                            <option value="1">今天</option>
-                            <option value="7" selected>近7天</option>
-                            <option value="30">近30天</option>
-                            <option value="all">全部</option>
-                        </select>
-                    </div>
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-value" id="oralCount">12</div>
-                            <div class="stat-label">英语启蒙</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="habitCount">6</div>
-                            <div class="stat-label">习惯养成</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="mathCount">8</div>
-                            <div class="stat-label">数感培养</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="storyCount">15</div>
-                            <div class="stat-label">睡前故事</div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -539,62 +379,8 @@
     </div>
 
     <script>
-        // 英语启蒙主题库
-        const oralTopics = [
-            { title: '日常问候', desc: '学习基本的问候用语，如"Hello"、"Goodbye"、"Thank you"等' },
-            { title: '颜色认知', desc: '通过对话学习各种颜色的英文名称，如"Red"、"Blue"、"Yellow"等' },
-            { title: '动物世界', desc: '认识各种动物的英文名称，如"Dog"、"Cat"、"Bird"、"Fish"等' },
-            { title: '家庭成员', desc: '学习家庭成员的英文称呼，如"Mom"、"Dad"、"Sister"、"Brother"等' },
-            { title: '食物名称', desc: '认识各种食物的英文名称，如"Apple"、"Milk"、"Bread"、"Egg"等' },
-            { title: '身体部位', desc: '学习身体各部位的英文名称，如"Head"、"Hand"、"Foot"、"Eye"等' },
-            { title: '天气表达', desc: '学习描述天气的英文词汇，如"Sunny"、"Rainy"、"Cloudy"、"Windy"等' },
-            { title: '动作词汇', desc: '学习基本动作词汇，如"Run"、"Jump"、"Walk"、"Sit"、"Stand"等' },
-            { title: '情感表达', desc: '学习表达情感的词汇，如"Happy"、"Sad"、"Angry"、"Excited"等' },
-            { title: '数字学习', desc: '学习基础数字的英文表达，如"One"、"Two"、"Three"、"Four"、"Five"等' },
-            { title: '玩具名称', desc: '认识各种玩具的英文名称，如"Ball"、"Doll"、"Car"、"Blocks"等' },
-            { title: '衣物穿着', desc: '学习衣物的英文名称，如"Shirt"、"Pants"、"Shoes"、"Hat"等' }
-        ];
 
-        // 习惯养成主题库
-        const habitTopics = [
-            { title: '早睡早起', desc: '培养健康的作息习惯' },
-            { title: '整理玩具', desc: '学习收拾整理，培养责任感' },
-            { title: '自己吃饭', desc: '培养独立就餐的好习惯' },
-            { title: '刷牙洗脸', desc: '养成良好的个人卫生习惯' },
-            { title: '礼貌用语', desc: '学习使用"请"、"谢谢"等礼貌用语' },
-            { title: '分享玩具', desc: '培养与他人分享的习惯' },
-            { title: '自己穿衣', desc: '学习独立穿衣的能力' },
-            { title: '饭前洗手', desc: '养成良好的卫生习惯' },
-            { title: '爱护图书', desc: '学习爱护书籍和物品' }
-        ];
-
-        // 数感培养主题库
-        const mathTopics = [
-            { title: '数数游戏', desc: '通过有趣的游戏学习1-10的数字' },
-            { title: '形状认知', desc: '认识圆形、方形、三角形等基本形状' },
-            { title: '大小比较', desc: '学习比较大小、多少等基本概念' },
-            { title: '数字配对', desc: '通过配对游戏认识数字' },
-            { title: '数量对应', desc: '学习数字与数量的对应关系' },
-            { title: '简单排序', desc: '学习从小到大、从高到低等排序概念' },
-            { title: '空间方位', desc: '学习上下、左右、前后等空间概念' },
-            { title: '时间概念', desc: '学习早上、中午、晚上等时间概念' },
-            { title: '简单分类', desc: '学习按颜色、形状等特征分类' }
-        ];
-
-        // 睡前故事库
-        const stories = [
-            { title: '小兔子的冒险', desc: '温暖治愈的睡前故事，帮助孩子安静入睡' },
-            { title: '星星的梦想', desc: '充满想象力的故事，激发孩子的创造力' },
-            { title: '森林里的朋友', desc: '关于友谊和分享的温馨故事' },
-            { title: '月亮的故事', desc: '关于月亮的美丽传说，适合睡前聆听' },
-            { title: '小熊的晚安', desc: '温馨的晚安故事，帮助孩子进入梦乡' },
-            { title: '彩虹桥', desc: '充满色彩的故事，带给孩子美好的梦境' },
-            { title: '小星星的旅程', desc: '关于探索和发现的睡前故事' },
-            { title: '花园里的秘密', desc: '充满想象力的奇幻故事' },
-            { title: '温暖的拥抱', desc: '关于爱和关怀的温馨故事' }
-        ];
-
-        // 家长嘴替话术库
+        // 自定义主题成长话术库
         const parentTips = [
             { title: '起床话术', desc: '温柔唤醒孩子，如"宝贝，新的一天开始啦，太阳公公在等你呢"' },
             { title: '鼓励表扬', desc: '积极正面的鼓励，如"你真棒！妈妈看到你很努力"' },
@@ -609,86 +395,6 @@
             { title: '任务完成', desc: '完成任务后的鼓励，如"太棒了！你完成得很好，妈妈很高兴"' },
             { title: '出门准备', desc: '出门前的引导，如"我们要出门啦，记得带上你的小水壶哦"' }
         ];
-
-        // 随机生成英语启蒙主题
-        function generateOralTopics() {
-            // 收起其他功能的选项列表
-            document.getElementById('habitOptions').classList.remove('show');
-            document.getElementById('mathOptions').classList.remove('show');
-            document.getElementById('storyOptions').classList.remove('show');
-            
-            const options = document.getElementById('oralOptions');
-            const shuffled = [...oralTopics].sort(() => Math.random() - 0.5).slice(0, 3);
-            
-            options.innerHTML = shuffled.map(topic => `
-                <div class="option-item" onclick="selectTopic('oral', '${topic.title}')">
-                    <div class="option-title">${topic.title}</div>
-                    <div class="option-desc">${topic.desc}</div>
-                </div>
-            `).join('');
-            
-            options.classList.add('show');
-        }
-
-        // 随机生成习惯养成主题
-        function generateHabitTopics() {
-            // 收起其他功能的选项列表
-            document.getElementById('oralOptions').classList.remove('show');
-            document.getElementById('mathOptions').classList.remove('show');
-            document.getElementById('storyOptions').classList.remove('show');
-            
-            const options = document.getElementById('habitOptions');
-            const shuffled = [...habitTopics].sort(() => Math.random() - 0.5).slice(0, 3);
-            
-            options.innerHTML = shuffled.map(topic => `
-                <div class="option-item" onclick="selectTopic('habit', '${topic.title}')">
-                    <div class="option-title">${topic.title}</div>
-                    <div class="option-desc">${topic.desc}</div>
-                </div>
-            `).join('');
-            
-            options.classList.add('show');
-        }
-
-        // 随机生成数感培养主题
-        function generateMathTopics() {
-            // 收起其他功能的选项列表
-            document.getElementById('oralOptions').classList.remove('show');
-            document.getElementById('habitOptions').classList.remove('show');
-            document.getElementById('storyOptions').classList.remove('show');
-            
-            const options = document.getElementById('mathOptions');
-            const shuffled = [...mathTopics].sort(() => Math.random() - 0.5).slice(0, 3);
-            
-            options.innerHTML = shuffled.map(topic => `
-                <div class="option-item" onclick="selectTopic('math', '${topic.title}')">
-                    <div class="option-title">${topic.title}</div>
-                    <div class="option-desc">${topic.desc}</div>
-                </div>
-            `).join('');
-            
-            options.classList.add('show');
-        }
-
-        // 随机生成睡前故事
-        function generateStories() {
-            // 收起其他功能的选项列表
-            document.getElementById('oralOptions').classList.remove('show');
-            document.getElementById('habitOptions').classList.remove('show');
-            document.getElementById('mathOptions').classList.remove('show');
-            
-            const options = document.getElementById('storyOptions');
-            const shuffled = [...stories].sort(() => Math.random() - 0.5).slice(0, 3);
-            
-            options.innerHTML = shuffled.map(story => `
-                <div class="option-item" onclick="selectTopic('story', '${story.title}')">
-                    <div class="option-title">${story.title}</div>
-                    <div class="option-desc">${story.desc}</div>
-                </div>
-            `).join('');
-            
-            options.classList.add('show');
-        }
 
         // 填充示例场景
         function fillExample(text) {
@@ -729,105 +435,29 @@
             // 这里应该发送指令到线下玩偶
             console.log(`选择${type}主题: ${title}`);
             alert(`已选择：${title}\n玩偶将开始讲述并和孩子展开对话`);
-            
-            // 更新统计数据
-            updateStats(type);
         }
 
-        // 更新统计数据
-        function updateStats(type) {
-            // 获取历史记录
-            let records = JSON.parse(localStorage.getItem('growthRecords') || '[]');
-            
-            // 添加新记录
-            records.push({
-                type: type,
-                timestamp: Date.now()
-            });
-            
-            // 保存记录
-            localStorage.setItem('growthRecords', JSON.stringify(records));
-            
-            // 重新计算并显示统计
-            filterStats();
-        }
-
-        // 根据时间筛选统计数据
-        function filterStats() {
-            const filterValue = document.getElementById('timeFilter').value;
-            const now = Date.now();
-            let startTime = 0;
-            
-            // 计算起始时间
-            if (filterValue === '1') {
-                // 今天：当天0点开始
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                startTime = today.getTime();
-            } else if (filterValue === '7') {
-                // 近7天
-                startTime = now - 7 * 24 * 60 * 60 * 1000;
-            } else if (filterValue === '30') {
-                // 近30天
-                startTime = now - 30 * 24 * 60 * 60 * 1000;
-            } else {
-                // 全部
-                startTime = 0;
+        // 检查设备绑定状态
+        function checkDevicePaired() {
+            const isPaired = localStorage.getItem('devicePaired') === 'true';
+            if (!isPaired) {
+                // 显示睡眠状态
+                document.querySelector('.content').innerHTML = `
+                    <div class="sleep-container">
+                        <div class="sleep-icon">😴</div>
+                        <div class="sleep-text">请先绑定设备</div>
+                    </div>
+                `;
+                return false;
             }
-            
-            // 获取记录并过滤
-            const records = JSON.parse(localStorage.getItem('growthRecords') || '[]');
-            const filteredRecords = records.filter(record => record.timestamp >= startTime);
-            
-            // 统计各类型数量
-            const counts = {
-                oral: 0,
-                habit: 0,
-                math: 0,
-                story: 0
-            };
-            
-            filteredRecords.forEach(record => {
-                if (counts.hasOwnProperty(record.type)) {
-                    counts[record.type]++;
-                }
-            });
-            
-            // 更新显示
-            document.getElementById('oralCount').textContent = counts.oral;
-            document.getElementById('habitCount').textContent = counts.habit;
-            document.getElementById('mathCount').textContent = counts.math;
-            document.getElementById('storyCount').textContent = counts.story;
+            return true;
         }
 
-        // 页面加载时显示统计数据
+        // 页面加载时初始化
         window.addEventListener('DOMContentLoaded', function() {
-            // 首次加载，如果有旧的统计数据（counts格式），迁移到新的记录格式
-            const oldStats = localStorage.getItem('growthStats');
-            const records = localStorage.getItem('growthRecords');
-            
-            if (oldStats && !records) {
-                // 迁移旧数据：将旧的计数转换为记录（使用当前时间）
-                const stats = JSON.parse(oldStats);
-                const migratedRecords = [];
-                const now = Date.now();
-                
-                // 为每个旧计数创建记录
-                ['oral', 'habit', 'math', 'story'].forEach(type => {
-                    const count = stats[type] || 0;
-                    for (let i = 0; i < count; i++) {
-                        migratedRecords.push({
-                            type: type,
-                            timestamp: now - (count - i) * 60000 // 每条记录间隔1分钟
-                        });
-                    }
-                });
-                
-                localStorage.setItem('growthRecords', JSON.stringify(migratedRecords));
+            if (!checkDevicePaired()) {
+                return;
             }
-            
-            // 应用当前筛选器并显示统计
-            filterStats();
         });
     </script>
 </body>
