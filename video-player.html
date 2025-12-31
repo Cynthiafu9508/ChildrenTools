@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>视频播放 - AI玩具小程序</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-header {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            position: relative;
+            z-index: 100;
+        }
+
+        .video-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+            transition: background 0.3s;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .video-back:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .video-back:active {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .video-title {
+            font-size: 16px;
+            font-weight: 500;
+            flex: 1;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-left: 15px;
+            min-width: 0;
+        }
+
+        .video-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .video-controls {
+            padding: 20px;
+            background: rgba(0,0,0,0.8);
+            color: #fff;
+            position: relative;
+            z-index: 100;
+        }
+
+        .task-info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .task-info-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .task-info-desc {
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.5;
+        }
+
+        .video-progress-container {
+            margin-bottom: 15px;
+        }
+
+        .video-progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .video-progress-fill {
+            height: 100%;
+            background: #FF8C42;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+
+        .video-progress-handle {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: #FF8C42;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .video-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 15px;
+        }
+
+        .video-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .video-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .video-btn:active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .video-btn.play {
+            width: 60px;
+            height: 60px;
+            background: #FF8C42;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="screen">
+            <div class="video-header">
+            <div class="video-back" id="videoBack">
+                <span>←</span>
+                <span>返回剧场</span>
+            </div>
+            <div class="video-title" id="videoTitle">第1集：与星宝相识</div>
+        </div>
+        <div class="video-container">
+            <video class="video-player" id="videoPlayer" controls>
+                您的浏览器不支持视频播放
+            </video>
+        </div>
+        <div class="video-controls">
+            <div class="task-info">
+                <div class="task-info-title">📋 任务说明</div>
+                <div class="task-info-desc" id="taskDesc">任务说明：用英文做自我介绍，包含"my,name,like"等高频主题词。</div>
+            </div>
+            <div class="video-progress-container">
+                <div class="video-progress-bar" id="videoProgressBar">
+                    <div class="video-progress-fill" id="videoProgressFill"></div>
+                    <div class="video-progress-handle" id="videoProgressHandle"></div>
+                </div>
+                <div class="video-time">
+                    <span id="currentTime">00:00</span>
+                    <span id="totalTime">00:00</span>
+                </div>
+            </div>
+            <div class="video-buttons">
+                <button class="video-btn" id="prevBtn">⏮</button>
+                <button class="video-btn play" id="playPauseBtn">▶</button>
+                <button class="video-btn" id="nextBtn">⏭</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        // 动画片数据
+        const episodes = [
+            { id: 1, title: '与星宝相识', task: '任务说明：用英文做自我介绍，包含"my,name,like"等高频主题词。' },
+            { id: 2, title: '任务名称待定', task: '任务描述待定' },
+            { id: 3, title: '任务名称待定', task: '任务描述待定' },
+            { id: 4, title: '任务名称待定', task: '任务描述待定' },
+            { id: 5, title: '任务名称待定', task: '任务描述待定' },
+            { id: 6, title: '任务名称待定', task: '任务描述待定' },
+            { id: 7, title: '任务名称待定', task: '任务描述待定' }
+        ];
+
+        // 获取URL参数
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                episode: parseInt(params.get('episode')) || 1
+            };
+        }
+
+        // 初始化页面
+        function initPage() {
+            const params = getUrlParams();
+            const episodeId = params.episode;
+            const episode = episodes.find(e => e.id === episodeId);
+            
+            if (!episode) {
+                alert('未找到该集数');
+                window.location.href = 'theater.html';
+                return;
+            }
+            
+            // 检查是否解锁
+            const completedEpisodes = getCompletedEpisodes();
+            const currentEpisode = getCurrentEpisode();
+            const isLocked = episode.id !== currentEpisode && !completedEpisodes.includes(episode.id);
+            
+            if (isLocked) {
+                const prevEpisode = episode.id - 1;
+                alert(`请先完成第${prevEpisode}集才能解锁第${episode.id}集`);
+                window.location.href = 'theater.html';
+                return;
+            }
+            
+            loadEpisode(episode);
+            initVideoControls();
+        }
+
+        // 加载集数
+        function loadEpisode(episode) {
+            const videoTitle = document.getElementById('videoTitle');
+            const taskDesc = document.getElementById('taskDesc');
+            const videoPlayer = document.getElementById('videoPlayer');
+            
+            videoTitle.textContent = `第${episode.id}集：${episode.title}`;
+            taskDesc.textContent = episode.task;
+            
+            // 设置视频源（这里使用占位视频，实际使用时替换为真实视频URL）
+            // videoPlayer.src = `videos/episode${episode.id}.mp4`;
+            
+            // 恢复播放进度
+            const progress = getVideoProgress(episode.id);
+            if (progress > 0 && progress < 100 && videoPlayer.duration) {
+                videoPlayer.currentTime = (progress / 100) * videoPlayer.duration;
+            }
+        }
+
+        // 初始化视频控制
+        function initVideoControls() {
+            const videoPlayer = document.getElementById('videoPlayer');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const videoProgressBar = document.getElementById('videoProgressBar');
+            const videoProgressFill = document.getElementById('videoProgressFill');
+            const videoProgressHandle = document.getElementById('videoProgressHandle');
+            const currentTimeSpan = document.getElementById('currentTime');
+            const totalTimeSpan = document.getElementById('totalTime');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const videoBack = document.getElementById('videoBack');
+            
+            // 返回按钮
+            videoBack.onclick = function() {
+                videoPlayer.pause();
+                window.location.href = 'theater.html';
+            };
+            
+            // 播放/暂停
+            playPauseBtn.onclick = function() {
+                if (videoPlayer.paused) {
+                    videoPlayer.play();
+                    playPauseBtn.textContent = '⏸';
+                } else {
+                    videoPlayer.pause();
+                    playPauseBtn.textContent = '▶';
+                }
+            };
+            
+            // 视频播放状态更新
+            videoPlayer.addEventListener('play', function() {
+                playPauseBtn.textContent = '⏸';
+            });
+            
+            videoPlayer.addEventListener('pause', function() {
+                playPauseBtn.textContent = '▶';
+            });
+            
+            // 更新进度条
+            videoPlayer.addEventListener('timeupdate', function() {
+                const progress = (videoPlayer.currentTime / videoPlayer.duration) * 100 || 0;
+                videoProgressFill.style.width = progress + '%';
+                videoProgressHandle.style.left = progress + '%';
+                
+                currentTimeSpan.textContent = formatTime(videoPlayer.currentTime);
+                
+                // 保存播放进度
+                const params = getUrlParams();
+                const currentEpisode = params.episode;
+                if (currentEpisode) {
+                    saveVideoProgress(currentEpisode, progress);
+                }
+            });
+            
+            // 视频加载完成
+            videoPlayer.addEventListener('loadedmetadata', function() {
+                totalTimeSpan.textContent = formatTime(videoPlayer.duration);
+                
+                // 恢复播放进度
+                const params = getUrlParams();
+                const episodeId = params.episode;
+                const progress = getVideoProgress(episodeId);
+                if (progress > 0 && progress < 100) {
+                    videoPlayer.currentTime = (progress / 100) * videoPlayer.duration;
+                }
+            });
+            
+            // 点击进度条跳转
+            videoProgressBar.onclick = function(e) {
+                const rect = videoProgressBar.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                videoPlayer.currentTime = percent * videoPlayer.duration;
+            };
+            
+            // 上一集
+            prevBtn.onclick = function() {
+                const params = getUrlParams();
+                const currentEpisode = params.episode;
+                if (currentEpisode && currentEpisode > 1) {
+                    window.location.href = `video-player.html?episode=${currentEpisode - 1}`;
+                }
+            };
+            
+            // 下一集
+            nextBtn.onclick = function() {
+                const params = getUrlParams();
+                const currentEpisode = params.episode;
+                if (currentEpisode && currentEpisode < episodes.length) {
+                    const nextEpisode = episodes.find(e => e.id === currentEpisode + 1);
+                    if (nextEpisode) {
+                        const completedEpisodes = getCompletedEpisodes();
+                        const currentAvailableEpisode = getCurrentEpisode();
+                        const isLocked = !completedEpisodes.includes(nextEpisode.id) && nextEpisode.id !== currentAvailableEpisode;
+                        if (isLocked) {
+                            let message = `请先完成第${currentEpisode}集才能解锁第${nextEpisode.id}集`;
+                            
+                            // 第4集及以后需要隔日解锁
+                            if (nextEpisode.id >= 4) {
+                                message += `\n\n温馨提示：从第4集开始，除了完成上一集任务外，需要隔日才能解锁新剧集哦～`;
+                            }
+                            
+                            alert(message);
+                        } else {
+                            window.location.href = `video-player.html?episode=${nextEpisode.id}`;
+                        }
+                    }
+                }
+            };
+            
+            // 视频播放完成
+            videoPlayer.addEventListener('ended', function() {
+                // 检查是否完成任务（这里模拟，实际应该由服务端返回）
+                const params = getUrlParams();
+                const episodeId = params.episode;
+                checkTaskCompletion(episodeId);
+            });
+        }
+
+        // 检查任务完成
+        function checkTaskCompletion(episodeId) {
+            // 这里应该调用服务端API检查任务是否完成
+            // 模拟：播放完成后自动标记为完成
+            // 实际应该：根据服务端返回的结果来判断
+            
+            // 模拟API调用
+            setTimeout(function() {
+                // 假设服务端返回任务已完成
+                const isCompleted = true; // 实际应该从服务端获取
+                
+                if (isCompleted) {
+                    markEpisodeCompleted(episodeId);
+                    alert(`恭喜！你已完成第${episodeId}集的任务！`);
+                }
+            }, 500);
+        }
+
+        // 标记集数为已完成
+        function markEpisodeCompleted(episodeId) {
+            const completed = getCompletedEpisodes();
+            if (!completed.includes(episodeId)) {
+                completed.push(episodeId);
+                localStorage.setItem('theaterCompletedEpisodes', JSON.stringify(completed));
+            }
+        }
+
+        // 获取已完成的集数
+        function getCompletedEpisodes() {
+            const saved = localStorage.getItem('theaterCompletedEpisodes');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        // 获取当前可播放的集数
+        function getCurrentEpisode() {
+            const completed = getCompletedEpisodes();
+            if (completed.length === 0) {
+                return 1; // 第一集默认可播放
+            }
+            // 返回下一集
+            const maxCompleted = Math.max(...completed);
+            return maxCompleted < episodes.length ? maxCompleted + 1 : episodes.length;
+        }
+
+        // 保存视频播放进度
+        function saveVideoProgress(episodeId, progress) {
+            const progressData = getVideoProgressData();
+            progressData[episodeId] = progress;
+            localStorage.setItem('theaterVideoProgress', JSON.stringify(progressData));
+        }
+
+        // 获取视频播放进度
+        function getVideoProgress(episodeId) {
+            const progressData = getVideoProgressData();
+            return progressData[episodeId] || 0;
+        }
+
+        // 获取所有视频播放进度
+        function getVideoProgressData() {
+            const saved = localStorage.getItem('theaterVideoProgress');
+            return saved ? JSON.parse(saved) : {};
+        }
+
+        // 格式化时间
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', function() {
+            initPage();
+        });
+    </script>
+</body>
+</html>

@@ -19,9 +19,6 @@ results/*.txt
 # config/models_config.json
 # 注意：config目录下的其他配置文件（test_cases.json, evaluation_criteria.json）需要提交
 
-# 配置文件中的敏感信息（可选，如果不想提交配置模板可以取消注释）
-# config/models_config.json
-
 # IDE
 .vscode/
 .idea/
@@ -37,4 +34,6 @@ Thumbs.db
 .env
 .env.local
 
-
+# Node.js (来自远程仓库)
+*.log
+node_modules/

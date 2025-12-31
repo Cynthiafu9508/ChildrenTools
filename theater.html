@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>剧场 - AI玩具小程序</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #FFF4E6 0%, #FFF8F0 100%);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .content {
+            padding: 20px;
+            height: calc(100% - 44px - 50px);
+            overflow-y: auto;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* 进度区域 */
+        .progress-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .progress-count {
+            font-size: 18px;
+            font-weight: bold;
+            color: #FF8C42;
+        }
+
+        .progress-bar-container {
+            height: 8px;
+            background: #E5E5E5;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF8C42 0%, #FFA366 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-encourage {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* 动画片列表 */
+        .episode-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .episode-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .episode-card:active {
+            transform: scale(0.98);
+        }
+
+        .episode-card.completed {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .episode-card.available {
+            border-left: 4px solid #FF8C42;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+        }
+
+        .episode-card.locked {
+            opacity: 0.6;
+            background: #F5F5F5;
+        }
+
+        .episode-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .episode-card.completed .episode-number {
+            background: #4CAF50;
+            color: #fff;
+        }
+
+        .episode-card.available .episode-number {
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            color: #fff;
+        }
+
+        .episode-card.locked .episode-number {
+            background: #E0E0E0;
+            color: #999;
+        }
+
+        .episode-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .episode-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .episode-card.locked .episode-title {
+            color: #999;
+        }
+
+        .episode-task {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .episode-card.locked .episode-task {
+            color: #999;
+        }
+
+        .episode-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+
+        .status-badge.completed {
+            background: #E8F5E9;
+            color: #4CAF50;
+        }
+
+        .status-badge.available {
+            background: #E3F2FD;
+            color: #FF8C42;
+        }
+
+        .status-badge.locked {
+            background: #F5F5F5;
+            color: #999;
+        }
+
+        .episode-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        /* 更新提示卡片 */
+        .update-card {
+            background: linear-gradient(135deg, #FFE5CC 0%, #FFF0E0 100%);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(74, 144, 226, 0.1);
+            border: 2px dashed #FF8C42;
+            min-height: 120px;
+        }
+
+        .update-card-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .update-card-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #FF8C42;
+            margin-bottom: 6px;
+        }
+
+        .update-card-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .task-info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .task-info-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .task-info-desc {
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.5;
+        }
+
+        .nav-bar {
+            height: 50px;
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: #FF8C42;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 2px;
+            background: currentColor;
+            border-radius: 4px;
+        }
+
+        .nav-text {
+            font-size: 11px;
+        }
+
+        /* 睡眠状态样式 */
+        .sleep-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 200px);
+            min-height: 400px;
+        }
+
+        .sleep-icon {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            margin-bottom: 30px;
+            opacity: 0.6;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .sleep-text {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="screen">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>🔋 100%</span>
+            </div>
+            
+            <div class="content">
+                <div class="page-title">剧场</div>
+
+                <!-- 进度区域 -->
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <div class="progress-text">观看进度</div>
+                        <div class="progress-count" id="progressCount">0/7</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-encourage" id="progressEncourage">🎬 英文小剧场持续更新中，敬请期待更多精彩内容</div>
+                </div>
+
+                <!-- 动画片列表 -->
+                <div class="episode-list" id="episodeList">
+                    <!-- 动态生成 -->
+                </div>
+            </div>
+
+
+            <div class="nav-bar">
+                <div class="nav-item" onclick="window.location.href='pairing-set.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">伙伴</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">剧场</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='growth.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">成长</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='mine.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">我的</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 动画片数据
+        const episodes = [
+            { id: 1, title: '与星宝相识', task: '任务说明：用英文做自我介绍，包含"my,name,like"等高频主题词。' },
+            { id: 2, title: '任务名称待定', task: '任务描述待定' },
+            { id: 3, title: '任务名称待定', task: '任务描述待定' },
+            { id: 4, title: '任务名称待定', task: '任务描述待定' },
+            { id: 5, title: '任务名称待定', task: '任务描述待定' },
+            { id: 6, title: '任务名称待定', task: '任务描述待定' },
+            { id: 7, title: '任务名称待定', task: '任务描述待定' }
+        ];
+
+        // 初始化页面
+        function initPage() {
+            renderEpisodes();
+            updateProgress();
+        }
+
+        // 渲染动画片列表
+        function renderEpisodes() {
+            const episodeList = document.getElementById('episodeList');
+            const completedEpisodes = getCompletedEpisodes();
+            const currentEpisode = getCurrentEpisode();
+            
+            const episodesHtml = episodes.map((episode, index) => {
+                const isCompleted = completedEpisodes.includes(episode.id);
+                const isAvailable = episode.id === currentEpisode || isCompleted;
+                const isLocked = !isAvailable;
+                
+                let statusClass = 'locked';
+                let statusBadge = '<span class="status-badge locked">🔒 已锁定</span>';
+                let statusIcon = '🔒';
+                
+                if (isCompleted) {
+                    statusClass = 'completed';
+                    statusBadge = '<span class="status-badge completed">✓ 已完成</span>';
+                    statusIcon = '✓';
+                } else if (isAvailable) {
+                    statusClass = 'available';
+                    statusBadge = '<span class="status-badge available">🎬 开始播放</span>';
+                    statusIcon = '▶';
+                }
+                
+                return `
+                    <div class="episode-card ${statusClass}" onclick="handleEpisodeClick(${episode.id}, ${isLocked})">
+                        <div class="episode-number">${episode.id}</div>
+                        <div class="episode-info">
+                            <div class="episode-title">第${episode.id}集：${episode.title}</div>
+                            <div class="episode-task">${episode.task}</div>
+                        </div>
+                        <div class="episode-icon">${statusIcon}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // 添加更新提示卡片
+            const updateCardHtml = `
+                <div class="update-card">
+                    <div class="update-card-icon">🎬</div>
+                    <div class="update-card-title">更多精彩剧集即将上线</div>
+                    <div class="update-card-desc">剧场持续更新中，敬请期待</div>
+                </div>
+            `;
+            
+            episodeList.innerHTML = episodesHtml + updateCardHtml;
+        }
+
+        // 处理集数点击
+        function handleEpisodeClick(episodeId, isLocked) {
+            if (isLocked) {
+                const prevEpisode = episodeId - 1;
+                let message = `请先完成第${prevEpisode}集才能解锁第${episodeId}集`;
+                
+                // 第4集及以后需要隔日解锁
+                if (episodeId >= 4) {
+                    message += `\n\n温馨提示：从第4集开始，除了完成上一集任务外，需要隔日才能解锁新剧集哦～`;
+                }
+                
+                alert(message);
+                return;
+            }
+            
+            // 跳转到视频播放页面
+            window.location.href = `video-player.html?episode=${episodeId}`;
+        }
+
+        // 标记集数为已完成（供视频播放页面调用后刷新）
+        function markEpisodeCompleted(episodeId) {
+            const completed = getCompletedEpisodes();
+            if (!completed.includes(episodeId)) {
+                completed.push(episodeId);
+                localStorage.setItem('theaterCompletedEpisodes', JSON.stringify(completed));
+                renderEpisodes();
+                updateProgress();
+            }
+        }
+
+        // 获取已完成的集数
+        function getCompletedEpisodes() {
+            const saved = localStorage.getItem('theaterCompletedEpisodes');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        // 获取当前可播放的集数
+        function getCurrentEpisode() {
+            const completed = getCompletedEpisodes();
+            if (completed.length === 0) {
+                return 1; // 第一集默认可播放
+            }
+            // 返回下一集
+            const maxCompleted = Math.max(...completed);
+            return maxCompleted < episodes.length ? maxCompleted + 1 : episodes.length;
+        }
+
+
+        // 更新进度显示
+        function updateProgress() {
+            const completed = getCompletedEpisodes();
+            const count = completed.length;
+            const total = episodes.length;
+            const percent = (count / total) * 100;
+            
+            document.getElementById('progressCount').textContent = `${count}/${total}`;
+            document.getElementById('progressBar').style.width = percent + '%';
+            
+            // 更新鼓励文案
+            const encourageTexts = [
+                '🎬 英文小剧场持续更新中，敬请期待更多精彩内容',
+                '继续加油，完成更多任务！',
+                '太棒了，你已经完成了一半！',
+                '坚持就是胜利！',
+                '你做得很好，继续努力！',
+                '马上就要完成了！',
+                '恭喜你完成了所有任务！'
+            ];
+            const encourageIndex = Math.min(count, encourageTexts.length - 1);
+            document.getElementById('progressEncourage').textContent = encourageTexts[encourageIndex];
+        }
+
+        // 格式化时间
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        // 检查设备绑定状态
+        function checkDevicePaired() {
+            const deviceListStr = localStorage.getItem('deviceList');
+            let hasDevices = false;
+            if (deviceListStr) {
+                const deviceList = JSON.parse(deviceListStr);
+                hasDevices = deviceList.length > 0;
+            }
+            
+            if (!hasDevices) {
+                // 显示睡眠状态
+                document.querySelector('.content').innerHTML = `
+                    <div class="sleep-container">
+                        <div class="sleep-icon">😴</div>
+                        <div class="sleep-text">请先绑定设备</div>
+                    </div>
+                `;
+                return false;
+            }
+            return true;
+        }
+
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', function() {
+            if (checkDevicePaired()) {
+                initPage();
+            }
+        });
+        
+        // 页面显示时刷新（从视频播放页面返回时）
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                renderEpisodes();
+                updateProgress();
+            }
+        });
+    </script>
+</body>
+</html>

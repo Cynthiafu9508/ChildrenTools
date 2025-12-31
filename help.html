@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>帮助与客服 - AI玩具小程序</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #000 100%);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .header {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            color: #fff;
+            position: relative;
+        }
+
+        .back-button {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            position: absolute;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .header-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .content {
+            padding: 20px;
+            height: calc(100% - 88px);
+            overflow-y: auto;
+            color: #fff;
+        }
+
+        .help-section {
+            margin-bottom: 25px;
+        }
+
+        .help-section-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .help-item {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.8;
+        }
+
+        .help-item::before {
+            content: '•';
+            position: absolute;
+            left: 8px;
+            color: #FF8C42;
+        }
+
+        .help-sub-item {
+            font-size: 13px;
+            color: #999;
+            margin-top: 5px;
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+
+        .help-contact {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #3a3a4e;
+        }
+
+        .help-contact-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .help-contact-text {
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        .help-contact-email {
+            color: #FF8C42;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="screen">
+            <div class="status-bar">
+                <span>13:35</span>
+                <span>🔋 100%</span>
+            </div>
+            
+            <div class="header">
+                <div class="back-button" onclick="window.location.href='mine.html'">←</div>
+                <div class="header-title">帮助与客服</div>
+                <div class="header-right">
+                    <div class="header-icon">⋯</div>
+                    <div class="header-icon">◎</div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="help-section">
+                    <div class="help-section-title">配网失败提示及解决方法</div>
+                    <div class="help-item">如果出现配网失败的情况,点击弹窗中的【重试】按钮,则开始重新搜索设备;或者返回【首页-添加设备】重新进行配网。</div>
+                </div>
+
+                <div class="help-section">
+                    <div class="help-section-title">配网失败常见原因:</div>
+                    <div class="help-item">
+                        <strong>蓝牙扫描不到设备</strong>
+                        <div class="help-sub-item">①. 系统蓝牙功能未开启</div>
+                        <div class="help-sub-item">②. 微信蓝牙权限未开启:android和iOS的权限名称不一样,android是"附近设备"</div>
+                        <div class="help-sub-item" style="padding-left: 30px;">·蓝牙权限申请不弹出</div>
+                        <div class="help-sub-item" style="padding-left: 30px;">·蓝牙权限申请拒绝后,不再弹出</div>
+                        <div class="help-sub-item">③. 系统定位或微信位置权限未开启</div>
+                    </div>
+                    <div class="help-item">
+                        <strong>wifi无法连接</strong>
+                        <div class="help-sub-item">①. 不支持5G网络</div>
+                        <div class="help-sub-item">②. 不支持部分2.4G和5G融合网络</div>
+                        <div class="help-sub-item">③. wifi密码输入错误(建议输入时直接明文)</div>
+                        <div class="help-sub-item">④. iphone热点需要开启"最大兼容"开关</div>
+                        <div class="help-sub-item">⑤. iphone热点长期不使用,会自动关闭(但界面显示开启),需要关闭后重新打开,使得热点激活</div>
+                    </div>
+                </div>
+
+                <div class="help-section">
+                    <div class="help-item">若仍无法解决以上问题,可尝试以下方法:点击小程序右上角"……",点击【重新进入小程序】</div>
+                </div>
+
+                <div class="help-contact">
+                    <div class="help-contact-title">联系我们</div>
+                    <div class="help-contact-text">如您有更多问题,请邮件至 <span class="help-contact-email">service@doki-doki.top</span>。我们将第一时间回复。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

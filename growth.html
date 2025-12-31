@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>成长 - AI玩具小程序</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #FFF4E6 0%, #FFF8F0 100%);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .content {
+            padding: 20px;
+            height: calc(100% - 44px - 50px);
+            overflow-y: auto;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .function-section {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .function-section:active {
+            transform: scale(0.98);
+            opacity: 0.8;
+        }
+
+        .function-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .function-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .function-icon {
+            font-size: 24px;
+        }
+
+
+        .parent-input-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .parent-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .parent-input:focus {
+            border-color: #FF8C42;
+        }
+
+        .generate-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+        }
+
+        .generate-btn:hover {
+            opacity: 0.8;
+        }
+
+        .generate-btn:active {
+            opacity: 0.6;
+        }
+
+        .example-section {
+            margin-bottom: 15px;
+        }
+
+        .example-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .example-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .example-tag {
+            padding: 6px 12px;
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .example-tag:hover {
+            background: #FFE5CC;
+            border-color: #FF8C42;
+            color: #FF8C42;
+        }
+
+        .result-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #FFE5CC 0%, #FFF0E0 100%);
+            border-radius: 12px;
+        }
+
+        .result-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .result-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #fff;
+            border-radius: 8px;
+        }
+
+
+        .nav-bar {
+            height: 50px;
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+            color: #999;
+        }
+
+        .nav-item.active {
+            color: #FF8C42;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 2px;
+            background: currentColor;
+            border-radius: 4px;
+        }
+
+        .nav-text {
+            font-size: 11px;
+        }
+
+        /* 睡眠状态样式 */
+        .sleep-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 200px);
+            min-height: 400px;
+        }
+
+        .sleep-icon {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            margin-bottom: 30px;
+            opacity: 0.6;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .sleep-text {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="screen">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>🔋 100%</span>
+            </div>
+            
+            <div class="content">
+                <div class="page-title">成长</div>
+
+                <!-- 英语启蒙 -->
+                <div class="function-section" onclick="selectTopic('oral', '英语启蒙')">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">🗣️</span>
+                            <span>英语启蒙</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 百科知识 -->
+                <div class="function-section" onclick="selectTopic('knowledge', '百科知识')">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">📚</span>
+                            <span>百科知识</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 数感培养 -->
+                <div class="function-section" onclick="selectTopic('math', '数感培养')">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">🔢</span>
+                            <span>数感培养</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 睡前故事 -->
+                <div class="function-section" onclick="selectTopic('story', '睡前故事')">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">📖</span>
+                            <span>睡前故事</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 诗词教学 -->
+                <div class="function-section" onclick="selectTopic('poetry', '诗词教学')">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">📝</span>
+                            <span>诗词教学</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 自定义主题成长 -->
+                <div class="function-section">
+                    <div class="function-header">
+                        <div class="function-title">
+                            <span class="function-icon">💬</span>
+                            <span>自定义主题成长</span>
+                        </div>
+                    </div>
+                    <div class="parent-input-section">
+                        <input type="text" class="parent-input" id="parentInput" placeholder="输入需求，如：让孩子起床" />
+                        <button class="generate-btn" onclick="sendToDoll()">星宝转达</button>
+                    </div>
+                    <div class="example-section">
+                        <div class="example-label">示例场景：</div>
+                        <div class="example-tags">
+                            <span class="example-tag" onclick="fillExample('让孩子起床')">让孩子起床</span>
+                            <span class="example-tag" onclick="fillExample('鼓励孩子完成任务')">鼓励孩子完成任务</span>
+                            <span class="example-tag" onclick="fillExample('安抚孩子情绪')">安抚孩子情绪</span>
+                            <span class="example-tag" onclick="fillExample('引导孩子吃饭')">引导孩子吃饭</span>
+                            <span class="example-tag" onclick="fillExample('让孩子收拾玩具')">让孩子收拾玩具</span>
+                            <span class="example-tag" onclick="fillExample('引导孩子睡觉')">引导孩子睡觉</span>
+                        </div>
+                    </div>
+                    <div class="result-section" id="parentResult" style="display: none;">
+                        <div class="result-label">状态：</div>
+                        <div class="result-content" id="parentResultContent"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-bar">
+                <div class="nav-item" onclick="window.location.href='pairing-set.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">伙伴</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='theater.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">剧场</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">成长</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='mine.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">我的</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // 自定义主题成长话术库
+        const parentTips = [
+            { title: '起床话术', desc: '温柔唤醒孩子，如"宝贝，新的一天开始啦，太阳公公在等你呢"' },
+            { title: '鼓励表扬', desc: '积极正面的鼓励，如"你真棒！妈妈看到你很努力"' },
+            { title: '情绪安抚', desc: '处理孩子情绪，如"宝贝，我知道你现在很难过，我们一起想办法"' },
+            { title: '吃饭引导', desc: '引导孩子好好吃饭，如"哇，今天的饭菜好香啊，我们一起来尝尝"' },
+            { title: '收拾玩具', desc: '引导孩子整理，如"玩具们累了，我们送它们回家休息好吗"' },
+            { title: '睡前引导', desc: '帮助孩子入睡，如"宝贝真乖，现在该睡觉啦，明天又是美好的一天"' },
+            { title: '分享引导', desc: '引导孩子分享，如"和小朋友一起玩会更开心哦"' },
+            { title: '耐心等待', desc: '培养耐心，如"我们再等一会儿，宝贝可以做到的"' },
+            { title: '道歉引导', desc: '引导孩子道歉，如"说对不起是勇敢的表现，妈妈为你骄傲"' },
+            { title: '拒绝话术', desc: '温和说不，如"宝贝，妈妈理解你的想法，但这次我们不能这样做"' },
+            { title: '任务完成', desc: '完成任务后的鼓励，如"太棒了！你完成得很好，妈妈很高兴"' },
+            { title: '出门准备', desc: '出门前的引导，如"我们要出门啦，记得带上你的小水壶哦"' }
+        ];
+
+        // 填充示例场景
+        function fillExample(text) {
+            document.getElementById('parentInput').value = text;
+        }
+
+        // 发送指令给实体玩偶
+        function sendToDoll() {
+            const input = document.getElementById('parentInput').value.trim();
+            if (!input) {
+                alert('请输入需求描述');
+                return;
+            }
+
+            // 显示发送状态
+            document.getElementById('parentResultContent').textContent = '正在发送指令给玩偶...';
+            document.getElementById('parentResult').style.display = 'block';
+
+            // 这里应该通过API发送指令给实体玩偶
+            // 玩偶会根据输入的需求，以自己的性格设定来对孩子说话
+            console.log('发送指令给玩偶:', input);
+            
+            // 模拟发送指令（实际应该调用后端API）
+            setTimeout(() => {
+                document.getElementById('parentResultContent').innerHTML = 
+                    '✅ 指令已发送！<br>星宝正在以自己的方式对孩子说话...';
+                
+                // 3秒后隐藏结果
+                setTimeout(() => {
+                    document.getElementById('parentResult').style.display = 'none';
+                    document.getElementById('parentInput').value = '';
+                }, 3000);
+            }, 500);
+        }
+
+        // 选择主题
+        function selectTopic(type, title) {
+            // 这里应该发送指令到线下玩偶
+            console.log(`选择${type}主题: ${title}`);
+            alert(`已选择：${title}\n玩偶将开始讲述并和孩子展开对话`);
+        }
+
+        // 检查设备绑定状态
+        function checkDevicePaired() {
+            const deviceListStr = localStorage.getItem('deviceList');
+            let hasDevices = false;
+            if (deviceListStr) {
+                const deviceList = JSON.parse(deviceListStr);
+                hasDevices = deviceList.length > 0;
+            }
+            
+            if (!hasDevices) {
+                // 显示睡眠状态
+                document.querySelector('.content').innerHTML = `
+                    <div class="sleep-container">
+                        <div class="sleep-icon">😴</div>
+                        <div class="sleep-text">请先绑定设备</div>
+                    </div>
+                `;
+                return false;
+            }
+            return true;
+        }
+
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', function() {
+            if (!checkDevicePaired()) {
+                return;
+            }
+        });
+    </script>
+</body>
+</html>
