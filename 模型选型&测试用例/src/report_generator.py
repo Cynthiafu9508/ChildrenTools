@@ -246,24 +246,11 @@ class ReportGenerator:
         return "\n".join(report_lines)
     
     def save_reports(self, output_dir: str = "results"):
-        """保存报告到文件"""
+        """保存报告到文件（仅保存Excel格式，综合报告由其他方式生成）"""
         os.makedirs(output_dir, exist_ok=True)
         
-        # 保存汇总报告
-        summary = self.generate_summary_report()
-        summary_path = os.path.join(output_dir, "summary_report.txt")
-        with open(summary_path, 'w', encoding='utf-8') as f:
-            f.write(summary)
-        print(f"📊 汇总报告已保存: {summary_path}")
-        
-        # 保存详细报告
-        detailed = self.generate_detailed_report()
-        detailed_path = os.path.join(output_dir, "detailed_report.txt")
-        with open(detailed_path, 'w', encoding='utf-8') as f:
-            f.write(detailed)
-        print(f"📋 详细报告已保存: {detailed_path}")
-        
-        # 保存Excel格式
+        # 不再生成汇总报告和详细报告，只保留综合报告
+        # 保存Excel格式（可选）
         self._save_excel_report(output_dir)
     
     def _save_excel_report(self, output_dir: str):
