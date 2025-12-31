@@ -1,12 +1,21 @@
 {
   "models": {
     "qwen": {
-      "name": "通义千问",
+      "name": "通义千问-Turbo",
       "provider": "dashscope",
       "model_id": "qwen-turbo",
       "api_key": "sk-06dc5699b476442abc923ee23687408c",
       "api_base": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-      "description": "阿里云通义千问，适合中文场景，成本较低",
+      "description": "阿里云通义千问Turbo，快速响应，成本较低",
+      "recommended_key_location": "阿里云控制台 -> API-KEY管理"
+    },
+    "qwen72b": {
+      "name": "通义千问-72B",
+      "provider": "dashscope",
+      "model_id": "qwen1.5-72b-chat",
+      "api_key": "sk-06dc5699b476442abc923ee23687408c",
+      "api_base": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "description": "通义千问1.5-72B，720亿参数，能力更强",
       "recommended_key_location": "阿里云控制台 -> API-KEY管理"
     },
     "deepseek": {

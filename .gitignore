@@ -9,11 +9,12 @@ venv/
 ENV/
 .venv
 
-# 测试结果
-results/
-results/*.json
-results/*.xlsx
-results/*.txt
+# 测试结果（允许提交报告文件）
+# results/  # 注释掉，允许提交results目录
+# results/*.json  # 注释掉，允许提交JSON结果
+# results/*.xlsx  # 注释掉，允许提交Excel报告
+# results/*.txt  # 注释掉，允许提交文本报告
+results/__pycache__/
 
 # 配置文件中的敏感信息（可选，如果不想提交配置模板可以取消注释）
 # config/models_config.json
