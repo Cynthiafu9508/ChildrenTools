@@ -1,0 +1,122 @@
+{
+  "evaluation_dimensions": {
+    "language_ability": {
+      "name": "语言能力",
+      "weight": 0.25,
+      "sub_criteria": {
+        "pronunciation_accuracy": {
+          "name": "发音准确性",
+          "description": "英语发音是否标准清晰",
+          "score_range": [0, 10]
+        },
+        "grammar_correctness": {
+          "name": "语法正确性",
+          "description": "语法使用是否正确",
+          "score_range": [0, 10]
+        },
+        "vocabulary_appropriateness": {
+          "name": "词汇适龄性",
+          "description": "词汇选择是否适合3-6岁儿童",
+          "score_range": [0, 10]
+        },
+        "expression_naturalness": {
+          "name": "表达自然度",
+          "description": "语言表达是否自然流畅",
+          "score_range": [0, 10]
+        }
+      }
+    },
+    "teaching_adaptability": {
+      "name": "教学适配性",
+      "weight": 0.30,
+      "sub_criteria": {
+        "child_friendly_language": {
+          "name": "儿童化表达",
+          "description": "是否使用简单有趣、适合儿童的语言",
+          "score_range": [0, 10]
+        },
+        "interaction_quality": {
+          "name": "互动质量",
+          "description": "提问、鼓励、纠错等互动是否恰当",
+          "score_range": [0, 10]
+        },
+        "personalization": {
+          "name": "个性化程度",
+          "description": "能否根据年龄和水平调整难度",
+          "score_range": [0, 10]
+        },
+        "engagement": {
+          "name": "趣味性",
+          "description": "能否通过故事、游戏等方式增加趣味",
+          "score_range": [0, 10]
+        }
+      }
+    },
+    "response_performance": {
+      "name": "响应性能",
+      "weight": 0.15,
+      "sub_criteria": {
+        "ttfb": {
+          "name": "首token延迟",
+          "description": "首token响应时间（秒），对实时对话体验至关重要，<0.5秒为优秀",
+          "score_range": [0, 10]
+        },
+        "latency": {
+          "name": "总响应延迟",
+          "description": "完整响应时间（秒），<2秒为优秀",
+          "score_range": [0, 10]
+        },
+        "latency_combined": {
+          "name": "综合延迟",
+          "description": "综合考虑首token延迟和总延迟的评分",
+          "score_range": [0, 10]
+        },
+        "stability": {
+          "name": "稳定性",
+          "description": "长时间对话是否稳定",
+          "score_range": [0, 10]
+        }
+      }
+    },
+    "safety_compliance": {
+      "name": "安全合规",
+      "weight": 0.20,
+      "sub_criteria": {
+        "content_filtering": {
+          "name": "内容过滤",
+          "description": "是否有效过滤不当内容",
+          "score_range": [0, 10]
+        },
+        "age_appropriateness": {
+          "name": "年龄适配",
+          "description": "内容是否适合3-6岁儿童",
+          "score_range": [0, 10]
+        }
+      }
+    },
+    "cost_efficiency": {
+      "name": "成本效益",
+      "weight": 0.10,
+      "sub_criteria": {
+        "api_cost": {
+          "name": "API成本",
+          "description": "单次调用成本（相对值）",
+          "score_range": [0, 10],
+          "calculation": "成本越低分数越高"
+        },
+        "token_efficiency": {
+          "name": "Token效率",
+          "description": "相同效果下使用的token数量",
+          "score_range": [0, 10]
+        }
+      }
+    }
+  },
+  "scoring_method": "weighted_average",
+  "report_format": {
+    "include_detailed_scores": true,
+    "include_comparison_charts": true,
+    "include_recommendations": true
+  }
+}
+

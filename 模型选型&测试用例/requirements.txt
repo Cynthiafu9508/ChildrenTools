@@ -1,0 +1,7 @@
+requests>=2.18.0
+pandas>=0.24.0
+numpy>=1.16.0
+python-dotenv>=0.10.0
+tabulate>=0.8.0
+openpyxl>=2.6.0
+

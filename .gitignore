@@ -1,5 +1,40 @@
-.DS_Store
-*.log
-node_modules/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# 测试结果（允许提交报告文件）
+# results/  # 注释掉，允许提交results目录
+# results/*.json  # 注释掉，允许提交JSON结果
+# results/*.xlsx  # 注释掉，允许提交Excel报告
+# results/*.txt  # 注释掉，允许提交文本报告
+results/__pycache__/
+
+# 配置文件中的敏感信息（可选，如果不想提交配置模板可以取消注释）
+# config/models_config.json
+# 注意：config目录下的其他配置文件（test_cases.json, evaluation_criteria.json）需要提交
+
+# IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 环境变量
+.env
+.env.local
+
+# Node.js (来自远程仓库)
+*.log
+node_modules/
