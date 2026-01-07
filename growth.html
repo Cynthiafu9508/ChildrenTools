@@ -98,6 +98,41 @@
             font-size: 24px;
         }
 
+        .function-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .function-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .function-example {
+            padding: 6px 12px;
+            background: #f8f8f8;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .function-arrow {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ccc;
+            font-size: 16px;
+        }
+
+        .function-header {
+            position: relative;
+        }
+
 
         .parent-input-section {
             display: flex;
@@ -284,6 +319,16 @@
                             <span class="function-icon">🗣️</span>
                             <span>英语启蒙</span>
                         </div>
+                        <span class="function-arrow">›</span>
+                    </div>
+                    <div class="function-desc">
+                        通过趣味对话和互动游戏，帮助孩子学习基础英语单词、短语和简单对话，培养英语语感和发音。
+                    </div>
+                    <div class="function-examples">
+                        <span class="function-example">学习颜色</span>
+                        <span class="function-example">数字1-10</span>
+                        <span class="function-example">日常问候</span>
+                        <span class="function-example">动物名称</span>
                     </div>
                 </div>
 
@@ -294,6 +339,16 @@
                             <span class="function-icon">📚</span>
                             <span>百科知识</span>
                         </div>
+                        <span class="function-arrow">›</span>
+                    </div>
+                    <div class="function-desc">
+                        探索自然、科学、历史等丰富知识，满足孩子的好奇心，拓展知识面，培养探索精神。
+                    </div>
+                    <div class="function-examples">
+                        <span class="function-example">动物世界</span>
+                        <span class="function-example">天文地理</span>
+                        <span class="function-example">科学实验</span>
+                        <span class="function-example">历史文化</span>
                     </div>
                 </div>
 
@@ -304,6 +359,16 @@
                             <span class="function-icon">🔢</span>
                             <span>数感培养</span>
                         </div>
+                        <span class="function-arrow">›</span>
+                    </div>
+                    <div class="function-desc">
+                        通过游戏化方式学习数字、计数、简单运算，培养数学思维和逻辑能力，让数学变得有趣。
+                    </div>
+                    <div class="function-examples">
+                        <span class="function-example">认识数字</span>
+                        <span class="function-example">数数游戏</span>
+                        <span class="function-example">简单加减</span>
+                        <span class="function-example">形状认知</span>
                     </div>
                 </div>
 
@@ -314,6 +379,16 @@
                             <span class="function-icon">📖</span>
                             <span>睡前故事</span>
                         </div>
+                        <span class="function-arrow">›</span>
+                    </div>
+                    <div class="function-desc">
+                        温馨的睡前故事陪伴，帮助孩子放松心情，培养阅读兴趣，促进良好睡眠习惯。
+                    </div>
+                    <div class="function-examples">
+                        <span class="function-example">童话故事</span>
+                        <span class="function-example">寓言故事</span>
+                        <span class="function-example">成长故事</span>
+                        <span class="function-example">晚安故事</span>
                     </div>
                 </div>
 
@@ -324,37 +399,19 @@
                             <span class="function-icon">📝</span>
                             <span>诗词教学</span>
                         </div>
+                        <span class="function-arrow">›</span>
+                    </div>
+                    <div class="function-desc">
+                        学习经典古诗词，感受中华文化之美，提升语言表达能力和文学素养。
+                    </div>
+                    <div class="function-examples">
+                        <span class="function-example">唐诗三百首</span>
+                        <span class="function-example">宋词精选</span>
+                        <span class="function-example">童谣儿歌</span>
+                        <span class="function-example">诗词赏析</span>
                     </div>
                 </div>
 
-                <!-- 自定义主题成长 -->
-                <div class="function-section">
-                    <div class="function-header">
-                        <div class="function-title">
-                            <span class="function-icon">💬</span>
-                            <span>自定义主题成长</span>
-                        </div>
-                    </div>
-                    <div class="parent-input-section">
-                        <input type="text" class="parent-input" id="parentInput" placeholder="输入需求，如：让孩子起床" />
-                        <button class="generate-btn" onclick="sendToDoll()">星宝转达</button>
-                    </div>
-                    <div class="example-section">
-                        <div class="example-label">示例场景：</div>
-                        <div class="example-tags">
-                            <span class="example-tag" onclick="fillExample('让孩子起床')">让孩子起床</span>
-                            <span class="example-tag" onclick="fillExample('鼓励孩子完成任务')">鼓励孩子完成任务</span>
-                            <span class="example-tag" onclick="fillExample('安抚孩子情绪')">安抚孩子情绪</span>
-                            <span class="example-tag" onclick="fillExample('引导孩子吃饭')">引导孩子吃饭</span>
-                            <span class="example-tag" onclick="fillExample('让孩子收拾玩具')">让孩子收拾玩具</span>
-                            <span class="example-tag" onclick="fillExample('引导孩子睡觉')">引导孩子睡觉</span>
-                        </div>
-                    </div>
-                    <div class="result-section" id="parentResult" style="display: none;">
-                        <div class="result-label">状态：</div>
-                        <div class="result-content" id="parentResultContent"></div>
-                    </div>
-                </div>
             </div>
 
             <div class="nav-bar">
@@ -379,56 +436,6 @@
     </div>
 
     <script>
-
-        // 自定义主题成长话术库
-        const parentTips = [
-            { title: '起床话术', desc: '温柔唤醒孩子，如"宝贝，新的一天开始啦，太阳公公在等你呢"' },
-            { title: '鼓励表扬', desc: '积极正面的鼓励，如"你真棒！妈妈看到你很努力"' },
-            { title: '情绪安抚', desc: '处理孩子情绪，如"宝贝，我知道你现在很难过，我们一起想办法"' },
-            { title: '吃饭引导', desc: '引导孩子好好吃饭，如"哇，今天的饭菜好香啊，我们一起来尝尝"' },
-            { title: '收拾玩具', desc: '引导孩子整理，如"玩具们累了，我们送它们回家休息好吗"' },
-            { title: '睡前引导', desc: '帮助孩子入睡，如"宝贝真乖，现在该睡觉啦，明天又是美好的一天"' },
-            { title: '分享引导', desc: '引导孩子分享，如"和小朋友一起玩会更开心哦"' },
-            { title: '耐心等待', desc: '培养耐心，如"我们再等一会儿，宝贝可以做到的"' },
-            { title: '道歉引导', desc: '引导孩子道歉，如"说对不起是勇敢的表现，妈妈为你骄傲"' },
-            { title: '拒绝话术', desc: '温和说不，如"宝贝，妈妈理解你的想法，但这次我们不能这样做"' },
-            { title: '任务完成', desc: '完成任务后的鼓励，如"太棒了！你完成得很好，妈妈很高兴"' },
-            { title: '出门准备', desc: '出门前的引导，如"我们要出门啦，记得带上你的小水壶哦"' }
-        ];
-
-        // 填充示例场景
-        function fillExample(text) {
-            document.getElementById('parentInput').value = text;
-        }
-
-        // 发送指令给实体玩偶
-        function sendToDoll() {
-            const input = document.getElementById('parentInput').value.trim();
-            if (!input) {
-                alert('请输入需求描述');
-                return;
-            }
-
-            // 显示发送状态
-            document.getElementById('parentResultContent').textContent = '正在发送指令给玩偶...';
-            document.getElementById('parentResult').style.display = 'block';
-
-            // 这里应该通过API发送指令给实体玩偶
-            // 玩偶会根据输入的需求，以自己的性格设定来对孩子说话
-            console.log('发送指令给玩偶:', input);
-            
-            // 模拟发送指令（实际应该调用后端API）
-            setTimeout(() => {
-                document.getElementById('parentResultContent').innerHTML = 
-                    '✅ 指令已发送！<br>星宝正在以自己的方式对孩子说话...';
-                
-                // 3秒后隐藏结果
-                setTimeout(() => {
-                    document.getElementById('parentResult').style.display = 'none';
-                    document.getElementById('parentInput').value = '';
-                }, 3000);
-            }, 500);
-        }
 
         // 选择主题
         function selectTopic(type, title) {

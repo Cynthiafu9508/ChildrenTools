@@ -61,6 +61,14 @@
             border-bottom: 1px solid #e5e5e5;
         }
 
+        .header-left {
+            position: absolute;
+            left: 20px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
         .header-right {
             position: absolute;
             right: 20px;
@@ -69,7 +77,7 @@
             align-items: center;
         }
 
-        .device-manage-btn, .add-partner-btn {
+        .device-manage-btn, .add-partner-btn, .diary-btn {
             width: 32px;
             height: 32px;
             background: rgba(0,0,0,0.05);
@@ -82,7 +90,7 @@
             transition: background 0.3s;
         }
 
-        .device-manage-btn:hover, .add-partner-btn:hover {
+        .device-manage-btn:hover, .add-partner-btn:hover, .diary-btn:hover {
             background: rgba(0,0,0,0.1);
         }
 
@@ -339,6 +347,152 @@
             color: #999;
             text-align: center;
         }
+
+        /* 聊天记录弹窗 */
+        .chat-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-modal.show {
+            display: flex;
+        }
+
+        .chat-modal-content {
+            width: 90%;
+            max-width: 340px;
+            height: 80%;
+            max-height: 600px;
+            background: #fff;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .chat-modal-close {
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .chat-modal-close:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .chat-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .chat-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+        }
+
+        .chat-empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .chat-empty-text {
+            font-size: 14px;
+        }
+
+        .chat-item {
+            margin-bottom: 20px;
+        }
+
+        .chat-date {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .chat-message {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .chat-message.doll {
+            justify-content: flex-start;
+        }
+
+        .chat-bubble {
+            max-width: 70%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .chat-message.user .chat-bubble {
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.doll .chat-bubble {
+            background: #f0f0f0;
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+            padding: 0 4px;
+        }
+
+        .chat-message.user .chat-time {
+            text-align: right;
+        }
+
+        .chat-message.doll .chat-time {
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -350,6 +504,9 @@
             </div>
             
             <div class="header">
+                <div class="header-left">
+                    <div class="diary-btn" onclick="openChatModal()" title="日记">📔</div>
+                </div>
                 <div class="header-right">
                     <div class="add-partner-btn" onclick="window.location.href='pairing-guide.html'" title="添加伙伴">+</div>
                     <div class="device-manage-btn" onclick="handleDeviceManage()" title="设备管理">⚙️</div>
@@ -414,6 +571,19 @@
                 <div class="tip-modal-content" onclick="event.stopPropagation()">
                     <div class="tip-modal-text">请绑定设备</div>
                     <button class="tip-modal-btn" onclick="closeTipModal()">确定</button>
+                </div>
+            </div>
+
+            <!-- 聊天记录弹窗 -->
+            <div class="chat-modal" id="chatModal" onclick="closeChatModal(event)">
+                <div class="chat-modal-content" onclick="event.stopPropagation()">
+                    <div class="chat-modal-header">
+                        <div class="chat-modal-title">聊天记录</div>
+                        <div class="chat-modal-close" onclick="closeChatModal()">×</div>
+                    </div>
+                    <div class="chat-modal-body" id="chatModalBody">
+                        <!-- 聊天记录内容将动态加载 -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -489,6 +659,125 @@
                 return;
             }
             document.getElementById('tipModal').classList.remove('show');
+        }
+
+        // 打开聊天记录弹窗
+        function openChatModal() {
+            document.getElementById('chatModal').classList.add('show');
+            loadChatHistory();
+        }
+
+        // 关闭聊天记录弹窗
+        function closeChatModal(event) {
+            if (event && event.target !== event.currentTarget) {
+                return;
+            }
+            document.getElementById('chatModal').classList.remove('show');
+        }
+
+        // 加载聊天记录
+        function loadChatHistory() {
+            const chatModalBody = document.getElementById('chatModalBody');
+            const chatHistory = getChatHistory();
+
+            if (!chatHistory || chatHistory.length === 0) {
+                chatModalBody.innerHTML = `
+                    <div class="chat-empty">
+                        <div class="chat-empty-icon">💬</div>
+                        <div class="chat-empty-text">暂无聊天记录</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // 按日期分组
+            const groupedChats = groupChatsByDate(chatHistory);
+            
+            let html = '';
+            for (const date in groupedChats) {
+                html += `<div class="chat-date">${date}</div>`;
+                groupedChats[date].forEach(chat => {
+                    const time = formatTime(chat.timestamp);
+                    if (chat.type === 'user') {
+                        html += `
+                            <div class="chat-message user">
+                                <div>
+                                    <div class="chat-bubble">${escapeHtml(chat.content)}</div>
+                                    <div class="chat-time">${time}</div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="chat-message doll">
+                                <div>
+                                    <div class="chat-bubble">${escapeHtml(chat.content)}</div>
+                                    <div class="chat-time">${time}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            chatModalBody.innerHTML = html;
+            // 滚动到底部
+            chatModalBody.scrollTop = chatModalBody.scrollHeight;
+        }
+
+        // 获取聊天记录
+        function getChatHistory() {
+            const chatHistoryStr = localStorage.getItem('chatHistory');
+            if (chatHistoryStr) {
+                return JSON.parse(chatHistoryStr);
+            }
+            return [];
+        }
+
+        // 按日期分组聊天记录
+        function groupChatsByDate(chats) {
+            const grouped = {};
+            chats.forEach(chat => {
+                const date = formatDate(chat.timestamp);
+                if (!grouped[date]) {
+                    grouped[date] = [];
+                }
+                grouped[date].push(chat);
+            });
+            return grouped;
+        }
+
+        // 格式化日期
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (date.toDateString() === today.toDateString()) {
+                return '今天';
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return '昨天';
+            } else {
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                return `${month}月${day}日`;
+            }
+        }
+
+        // 格式化时间
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
+        // HTML转义
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // 导航栏切换
