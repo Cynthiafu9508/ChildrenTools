@@ -64,9 +64,12 @@
         .header-left {
             position: absolute;
             left: 20px;
+            top: 88px;
             display: flex;
             gap: 8px;
             align-items: center;
+            z-index: 100;
+            pointer-events: auto;
         }
 
         .header-right {
@@ -77,7 +80,7 @@
             align-items: center;
         }
 
-        .device-manage-btn, .add-partner-btn, .diary-btn {
+        .device-manage-btn, .add-partner-btn {
             width: 32px;
             height: 32px;
             background: rgba(0,0,0,0.05);
@@ -90,7 +93,24 @@
             transition: background 0.3s;
         }
 
-        .device-manage-btn:hover, .add-partner-btn:hover, .diary-btn:hover {
+        .diary-btn {
+            width: 48px;
+            height: 48px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .device-manage-btn:hover, .add-partner-btn:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .diary-btn:hover {
             background: rgba(0,0,0,0.1);
         }
 
@@ -504,13 +524,14 @@
             </div>
             
             <div class="header">
-                <div class="header-left">
-                    <div class="diary-btn" onclick="openChatModal()" title="日记">📔</div>
-                </div>
                 <div class="header-right">
                     <div class="add-partner-btn" onclick="window.location.href='pairing-guide.html'" title="添加伙伴">+</div>
                     <div class="device-manage-btn" onclick="handleDeviceManage()" title="设备管理">⚙️</div>
                 </div>
+            </div>
+            
+            <div class="header-left">
+                <div class="diary-btn" onclick="openChatModal()" title="日记">📔</div>
             </div>
             
             <div class="page-container">
@@ -663,8 +684,13 @@
 
         // 打开聊天记录弹窗
         function openChatModal() {
-            document.getElementById('chatModal').classList.add('show');
-            loadChatHistory();
+            const chatModal = document.getElementById('chatModal');
+            if (chatModal) {
+                chatModal.classList.add('show');
+                loadChatHistory();
+            } else {
+                console.error('聊天记录弹窗元素未找到');
+            }
         }
 
         // 关闭聊天记录弹窗
@@ -694,8 +720,19 @@
             const groupedChats = groupChatsByDate(chatHistory);
             
             let html = '';
-            for (const date in groupedChats) {
+            // 按日期排序（最新的在前）
+            const sortedDates = Object.keys(groupedChats).sort((a, b) => {
+                if (a === '今天') return -1;
+                if (b === '今天') return 1;
+                if (a === '昨天') return -1;
+                if (b === '昨天') return 1;
+                return 0;
+            });
+            
+            sortedDates.forEach(date => {
                 html += `<div class="chat-date">${date}</div>`;
+                // 按时间排序
+                groupedChats[date].sort((a, b) => a.timestamp - b.timestamp);
                 groupedChats[date].forEach(chat => {
                     const time = formatTime(chat.timestamp);
                     if (chat.type === 'user') {
@@ -718,20 +755,97 @@
                         `;
                     }
                 });
-            }
+            });
 
             chatModalBody.innerHTML = html;
             // 滚动到底部
-            chatModalBody.scrollTop = chatModalBody.scrollHeight;
+            setTimeout(() => {
+                chatModalBody.scrollTop = chatModalBody.scrollHeight;
+            }, 100);
         }
 
         // 获取聊天记录
         function getChatHistory() {
             const chatHistoryStr = localStorage.getItem('chatHistory');
             if (chatHistoryStr) {
-                return JSON.parse(chatHistoryStr);
+                const history = JSON.parse(chatHistoryStr);
+                if (history && history.length > 0) {
+                    return history;
+                }
             }
-            return [];
+            // 返回示例数据
+            return getExampleChatHistory();
+        }
+
+        // 获取示例聊天记录
+        function getExampleChatHistory() {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            return [
+                {
+                    type: 'doll',
+                    content: '你好！我是星宝，很高兴认识你！今天想学什么呢？',
+                    timestamp: today.getTime() + 9 * 3600000 + 30 * 60000 // 今天 09:30
+                },
+                {
+                    type: 'user',
+                    content: '我想学英语！',
+                    timestamp: today.getTime() + 9 * 3600000 + 32 * 60000 // 今天 09:32
+                },
+                {
+                    type: 'doll',
+                    content: '太好了！让我们从颜色开始吧。你知道红色用英语怎么说吗？',
+                    timestamp: today.getTime() + 9 * 3600000 + 33 * 60000 // 今天 09:33
+                },
+                {
+                    type: 'user',
+                    content: 'Red！',
+                    timestamp: today.getTime() + 9 * 3600000 + 35 * 60000 // 今天 09:35
+                },
+                {
+                    type: 'doll',
+                    content: '太棒了！你答对了！红色就是red。那蓝色呢？',
+                    timestamp: today.getTime() + 9 * 3600000 + 36 * 60000 // 今天 09:36
+                },
+                {
+                    type: 'user',
+                    content: 'Blue！',
+                    timestamp: today.getTime() + 9 * 3600000 + 38 * 60000 // 今天 09:38
+                },
+                {
+                    type: 'doll',
+                    content: '你真聪明！继续加油哦！',
+                    timestamp: today.getTime() + 9 * 3600000 + 39 * 60000 // 今天 09:39
+                },
+                {
+                    type: 'doll',
+                    content: '今天想听故事吗？我可以给你讲一个有趣的故事哦！',
+                    timestamp: yesterday.getTime() + 20 * 3600000 + 15 * 60000 // 昨天 20:15
+                },
+                {
+                    type: 'user',
+                    content: '想听！',
+                    timestamp: yesterday.getTime() + 20 * 3600000 + 16 * 60000 // 昨天 20:16
+                },
+                {
+                    type: 'doll',
+                    content: '从前有一只小兔子，它非常喜欢胡萝卜...',
+                    timestamp: yesterday.getTime() + 20 * 3600000 + 17 * 60000 // 昨天 20:17
+                },
+                {
+                    type: 'user',
+                    content: '然后呢？',
+                    timestamp: yesterday.getTime() + 20 * 3600000 + 20 * 60000 // 昨天 20:20
+                },
+                {
+                    type: 'doll',
+                    content: '小兔子在森林里遇到了很多好朋友，它们一起分享胡萝卜，度过了快乐的一天。',
+                    timestamp: yesterday.getTime() + 20 * 3600000 + 21 * 60000 // 昨天 20:21
+                }
+            ];
         }
 
         // 按日期分组聊天记录
