@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>剧场解锁规则演示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #FFF4E6 0%, #FFF8F0 100%);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .content {
+            padding: 20px;
+            height: calc(100% - 44px - 50px);
+            overflow-y: auto;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .demo-hint {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 20px;
+            padding: 8px 12px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reset-btn {
+            padding: 6px 12px;
+            background: #FF8C42;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            background: #FF7A2E;
+        }
+
+        .reset-btn:active {
+            transform: scale(0.95);
+        }
+
+        .episode-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .episode-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .episode-card:active {
+            transform: scale(0.98);
+        }
+
+        .episode-card.completed {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .episode-card.available {
+            border-left: 4px solid #FF8C42;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+        }
+
+        .episode-card.locked {
+            opacity: 0.6;
+            background: #F5F5F5;
+        }
+
+        .episode-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .episode-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .episode-card.completed .episode-number {
+            background: #4CAF50;
+            color: #fff;
+        }
+
+        .episode-card.available .episode-number {
+            background: linear-gradient(135deg, #FF8C42 0%, #FFA366 100%);
+            color: #fff;
+        }
+
+        .episode-card.locked .episode-number {
+            background: #E0E0E0;
+            color: #999;
+        }
+
+        .episode-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .episode-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .episode-card.locked .episode-title {
+            color: #999;
+        }
+
+        .episode-task {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .episode-card.locked .episode-task {
+            color: #999;
+        }
+
+        .episode-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        /* 进度条样式 */
+        .progress-section {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-count {
+            font-size: 12px;
+            font-weight: 600;
+            color: #FF8C42;
+        }
+
+        .progress-bar-container {
+            height: 6px;
+            background: #E5E5E5;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF8C42 0%, #FFA366 100%);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .time-remaining {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .update-card {
+            background: linear-gradient(135deg, #FFE5CC 0%, #FFF0E0 100%);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(74, 144, 226, 0.1);
+            border: 2px dashed #FF8C42;
+            min-height: 120px;
+        }
+
+        .update-card-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .update-card-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #FF8C42;
+            margin-bottom: 6px;
+        }
+
+        .update-card-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .nav-bar {
+            height: 50px;
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: #FF8C42;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 2px;
+            background: currentColor;
+            border-radius: 4px;
+        }
+
+        .nav-text {
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="screen">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>🔋 100%</span>
+            </div>
+            
+            <div class="content">
+                <div class="page-title">剧场</div>
+                
+                <div class="demo-hint">
+                    <span>💡 提示：按 <strong>C</strong> 键可增加沟通轮次，按 <strong>D</strong> 键可增加24小时</span>
+                    <button class="reset-btn" onclick="resetDemo()">重置演示</button>
+                </div>
+
+                <div class="episode-list" id="episodeList">
+                    <!-- 动态生成 -->
+                </div>
+            </div>
+
+            <div class="nav-bar">
+                <div class="nav-item" onclick="window.location.href='pairing-set.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">伙伴</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">剧场</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='growth.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">成长</div>
+                </div>
+                <div class="nav-item" onclick="window.location.href='mine.html'">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">我的</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        const episodes = [
+            { id: 1, title: '与星宝相识', task: '任务说明：用英文做自我介绍，包含"my,name,like"等高频主题词。' },
+            { id: 2, title: '任务名称待定', task: '任务描述待定' },
+            { id: 3, title: '任务名称待定', task: '任务描述待定' },
+            { id: 4, title: '任务名称待定', task: '任务描述待定' },
+            { id: 5, title: '任务名称待定', task: '任务描述待定' },
+            { id: 6, title: '任务名称待定', task: '任务描述待定' },
+            { id: 7, title: '任务名称待定', task: '任务描述待定' }
+        ];
+
+        // 从 localStorage 恢复状态
+        function loadDemoState() {
+            try {
+                const savedPlayed = localStorage.getItem('theaterDemoPlayedEpisodes');
+                const savedUnlocked = localStorage.getItem('theaterDemoUnlockedEpisodes');
+                const savedRounds = localStorage.getItem('theaterDemoCommunicationRounds');
+                const savedTimes = localStorage.getItem('theaterDemoCompleteTimes');
+                
+                return {
+                    playedEpisodes: savedPlayed ? JSON.parse(savedPlayed) : [],
+                    unlockedEpisodes: savedUnlocked ? JSON.parse(savedUnlocked) : [],
+                    communicationRounds: savedRounds ? parseInt(savedRounds) || 0 : 0,
+                    episodeCompleteTimes: savedTimes ? JSON.parse(savedTimes) : {}
+                };
+            } catch (error) {
+                console.error('Error loading demo state:', error);
+                return {
+                    playedEpisodes: [],
+                    unlockedEpisodes: [],
+                    communicationRounds: 0,
+                    episodeCompleteTimes: {}
+                };
+            }
+        }
+
+        // 保存状态到 localStorage
+        function saveDemoState() {
+            try {
+                localStorage.setItem('theaterDemoPlayedEpisodes', JSON.stringify(demoState.playedEpisodes));
+                localStorage.setItem('theaterDemoUnlockedEpisodes', JSON.stringify(demoState.unlockedEpisodes));
+                localStorage.setItem('theaterDemoCommunicationRounds', demoState.communicationRounds.toString());
+                localStorage.setItem('theaterDemoCompleteTimes', JSON.stringify(demoState.episodeCompleteTimes));
+            } catch (error) {
+                console.error('Error saving demo state:', error);
+            }
+        }
+
+        let demoState = loadDemoState();
+
+        // 重置演示状态
+        function resetDemo() {
+            if (confirm('确定要重置演示吗？这将清除所有进度，从第一集重新开始。')) {
+                // 清除所有相关的 localStorage 数据
+                localStorage.removeItem('theaterDemoPlayedEpisodes');
+                localStorage.removeItem('theaterDemoUnlockedEpisodes');
+                localStorage.removeItem('theaterDemoCommunicationRounds');
+                localStorage.removeItem('theaterDemoCompleteTimes');
+                
+                // 重置状态
+                demoState = {
+                    playedEpisodes: [],
+                    unlockedEpisodes: [],
+                    communicationRounds: 0,
+                    episodeCompleteTimes: {}
+                };
+                
+                // 重新渲染页面
+                renderEpisodes();
+                alert('演示已重置，可以从第一集重新开始！');
+            }
+        }
+
+        function initPage() {
+            // 检查是否有已满足解锁条件的集数
+            tryUnlockByRounds();
+            renderEpisodes();
+        }
+
+        function renderEpisodes() {
+            try {
+                const episodeList = document.getElementById('episodeList');
+                if (!episodeList) {
+                    console.error('episodeList element not found');
+                    return;
+                }
+
+                if (!episodes || !Array.isArray(episodes) || episodes.length === 0) {
+                    console.error('Episodes data not available', episodes);
+                    episodeList.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">暂无剧集数据</div>';
+                    return;
+                }
+
+                let episodesHtml = '';
+
+                episodes.forEach((episode, index) => {
+                const episodeId = episode.id;
+                const isPlayed = demoState.playedEpisodes.includes(episodeId);
+                const isUnlocked = checkEpisodeUnlocked(episodeId);
+                const isAvailable = isUnlocked || isPlayed;
+                const isLocked = !isAvailable;
+
+                let statusClass = 'locked';
+                let statusIcon = '🔒';
+
+                if (isPlayed) {
+                    statusClass = 'completed';
+                    statusIcon = '✓';
+                } else if (isAvailable) {
+                    statusClass = 'available';
+                    statusIcon = '▶';
+                }
+
+                let progressHtml = '';
+                // 根据当前状态自动判断显示哪个集数的进度条
+                // 只显示未播放且未解锁集数的进度条
+                // 已播放的集数绝对不显示进度条
+                if (!isPlayed) {
+                    // 只处理未播放的集数
+                    // 第二集：第一集已播放，但第二集未播放且未解锁，显示进度条
+                    // 注意：如果第二集已播放，进度条应该转移到第三集
+                    if (episodeId === 2 && !isUnlocked && demoState.playedEpisodes.includes(1) && !demoState.playedEpisodes.includes(2)) {
+                        const rounds = demoState.communicationRounds;
+                        const required = 3;
+                        const percent = Math.min(100, (rounds / required) * 100);
+                        progressHtml = `
+                            <div class="progress-section">
+                                <div class="progress-label">
+                                    <span>与玩偶沟通进度</span>
+                                    <span class="progress-count">${rounds}/${required}轮次</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill" style="width: ${percent}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    } else if (episodeId === 3 && !isUnlocked &&
+                              demoState.playedEpisodes.includes(1) &&
+                              demoState.playedEpisodes.includes(2)) {
+                        // 第三集：第一、二集已播放，但第三集未播放且未解锁，显示进度条（第二集的进度条消失）
+                        const rounds = demoState.communicationRounds;
+                        const required = 5;
+                        const percent = Math.min(100, (rounds / required) * 100);
+                        progressHtml = `
+                            <div class="progress-section">
+                                <div class="progress-label">
+                                    <span>与玩偶沟通进度</span>
+                                    <span class="progress-count">${rounds}/${required}轮次</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill" style="width: ${percent}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    } else if (episodeId >= 4 && !isUnlocked &&
+                              demoState.playedEpisodes.includes(episodeId - 1)) {
+                        // 第四集及以后：上一集已播放，显示进度条和时间
+                        const rounds = demoState.communicationRounds;
+                        const required = 5;
+                        const percent = Math.min(100, (rounds / required) * 100);
+                        const progressText = rounds >= required ? '沟通进度完成' : `${rounds}/${required}轮次`;
+                        
+                        let timeHtml = '';
+                        // 第四集及以后都需要显示24小时等待信息
+                        if (episodeId >= 4) {
+                            const prevEpisode = episodeId - 1;
+                            const prevCompleteTime = demoState.episodeCompleteTimes[prevEpisode];
+                            if (prevCompleteTime) {
+                                const now = Date.now();
+                                const hoursPassed = (now - prevCompleteTime) / (1000 * 60 * 60);
+                                const hoursRemaining = Math.max(0, 24 - hoursPassed);
+                                
+                                if (hoursRemaining > 0) {
+                                    const hours = Math.floor(hoursRemaining);
+                                    const minutes = Math.floor((hoursRemaining - hours) * 60);
+                                    timeHtml = `<div class="time-remaining">⏰ 还需等待：${hours}小时${minutes}分钟</div>`;
+                                } else {
+                                    timeHtml = `<div class="time-remaining" style="color: #4CAF50;">✓ 24小时间隔已完成</div>`;
+                                }
+                            }
+                        }
+                        
+                        progressHtml = `
+                            <div class="progress-section">
+                                <div class="progress-label">
+                                <span>与玩偶沟通进度</span>
+                                <span class="progress-count">${progressText}</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill" style="width: ${percent}%"></div>
+                                </div>
+                                ${timeHtml}
+                            </div>
+                        `;
+                    }
+                }
+
+                episodesHtml += `
+                    <div class="episode-card ${statusClass}" onclick="handleEpisodeClick(${episodeId}, ${isLocked})">
+                        <div class="episode-header">
+                            <div class="episode-number">${episodeId}</div>
+                            <div class="episode-info">
+                                <div class="episode-title">第${episodeId}集：${episode.title}</div>
+                                <div class="episode-task">${episode.task}</div>
+                            </div>
+                            <div class="episode-icon">${statusIcon}</div>
+                        </div>
+                        ${progressHtml}
+                    </div>
+                `;
+                });
+
+                const updateCardHtml = `
+                    <div class="update-card">
+                        <div class="update-card-icon">🎬</div>
+                        <div class="update-card-title">更多精彩剧集即将上线</div>
+                        <div class="update-card-desc">剧场持续更新中，敬请期待</div>
+                    </div>
+                `;
+
+                episodeList.innerHTML = episodesHtml + updateCardHtml;
+            } catch (error) {
+                console.error('Error in renderEpisodes:', error);
+            }
+        }
+
+        function checkEpisodeUnlocked(episodeId) {
+            // 已播放的集数视为已解锁
+            if (demoState.playedEpisodes.includes(episodeId)) {
+                return true;
+            }
+
+            // 已解锁的集数视为已解锁
+            if (demoState.unlockedEpisodes.includes(episodeId)) {
+                return true;
+            }
+
+            if (episodeId === 1) {
+                return true; // 第一集总是解锁
+            }
+
+            if (episodeId === 2) {
+                // 第二集：需要第一集播放 + 沟通3轮次
+                if (demoState.playedEpisodes.includes(1) && demoState.communicationRounds >= 3) {
+                    // 如果满足条件但还没添加到 unlockedEpisodes，则添加
+                    if (!demoState.unlockedEpisodes.includes(2)) {
+                        demoState.unlockedEpisodes.push(2);
+                        saveDemoState();
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            if (episodeId === 3) {
+                // 第三集：需要第一、二集播放 + 沟通5轮次
+                if (demoState.playedEpisodes.includes(1) &&
+                    demoState.playedEpisodes.includes(2) &&
+                    demoState.communicationRounds >= 5) {
+                    // 如果满足条件但还没添加到 unlockedEpisodes，则添加
+                    if (!demoState.unlockedEpisodes.includes(3)) {
+                        demoState.unlockedEpisodes.push(3);
+                        saveDemoState();
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            if (episodeId === 4) {
+                // 第四集：需要第三集已播放 + 沟通5轮次 + 24小时
+                const prevEpisode = episodeId - 1;
+                if (!demoState.playedEpisodes.includes(prevEpisode)) {
+                    return false;
+                }
+                if (demoState.communicationRounds < 5) {
+                    return false;
+                }
+                const prevCompleteTime = demoState.episodeCompleteTimes[prevEpisode];
+                if (!prevCompleteTime) {
+                    return false;
+                }
+                const now = Date.now();
+                const hoursPassed = (now - prevCompleteTime) / (1000 * 60 * 60);
+                return hoursPassed >= 24;
+            }
+
+            if (episodeId >= 5) {
+                // 第五集及以后：需要上一集播放 + 沟通5轮次 + 24小时
+                const prevEpisode = episodeId - 1;
+                if (!demoState.playedEpisodes.includes(prevEpisode)) {
+                    return false;
+                }
+                if (demoState.communicationRounds < 5) {
+                    return false;
+                }
+                const prevCompleteTime = demoState.episodeCompleteTimes[prevEpisode];
+                if (!prevCompleteTime) {
+                    return false;
+                }
+                const now = Date.now();
+                const hoursPassed = (now - prevCompleteTime) / (1000 * 60 * 60);
+                return hoursPassed >= 24;
+            }
+
+            return false;
+        }
+
+        function handleEpisodeClick(episodeId, isLocked) {
+            // 重新检查解锁状态（防止状态不同步）
+            const isPlayed = demoState.playedEpisodes.includes(episodeId);
+            const isUnlocked = checkEpisodeUnlocked(episodeId);
+            const isActuallyLocked = !(isUnlocked || isPlayed);
+            
+            if (isActuallyLocked) {
+                showUnlockInfo(episodeId);
+                return;
+            }
+
+            // 标记为已播放
+            if (!demoState.playedEpisodes.includes(episodeId)) {
+                demoState.playedEpisodes.push(episodeId);
+                // 记录完成时间（用于24小时计时）
+                demoState.episodeCompleteTimes[episodeId] = Date.now();
+                // 保存状态
+                saveDemoState();
+            }
+            
+            // 跳转到视频播放页面
+            window.location.href = `video-player.html?episode=${episodeId}`;
+        }
+
+        function showUnlockInfo(episodeId) {
+            let message = '';
+            const requirements = [];
+            
+            if (episodeId === 1) {
+                message = '第1集可以直接播放';
+            } else if (episodeId === 2) {
+                const hasPlayed1 = demoState.playedEpisodes.includes(1);
+                const rounds = demoState.communicationRounds;
+                
+                if (!hasPlayed1) {
+                    requirements.push('播放第1集');
+                }
+                if (rounds < 3 && !demoState.unlockedEpisodes.includes(2)) {
+                    requirements.push(`与玩偶沟通3轮次（当前：${rounds}/3）`);
+                }
+                
+                if (requirements.length > 0) {
+                    message = `解锁第2集需要：\n${requirements.map((req, index) => `${index + 1}. ${req}`).join('\n')}`;
+                } else {
+                    message = '第2集已满足所有解锁条件，可以播放了！';
+                }
+            } else if (episodeId === 3) {
+                const hasPlayed1 = demoState.playedEpisodes.includes(1);
+                const hasPlayed2 = demoState.playedEpisodes.includes(2);
+                const rounds = demoState.communicationRounds;
+                
+                if (!hasPlayed1) {
+                    requirements.push('播放第1集');
+                }
+                if (!hasPlayed2) {
+                    requirements.push('播放第2集');
+                }
+                if (rounds < 5 && !demoState.unlockedEpisodes.includes(3)) {
+                    requirements.push(`与玩偶沟通5轮次（当前：${rounds}/5）`);
+                }
+                
+                if (requirements.length > 0) {
+                    message = `解锁第3集需要：\n${requirements.map((req, index) => `${index + 1}. ${req}`).join('\n')}`;
+                } else {
+                    message = '第3集已满足所有解锁条件，可以播放了！';
+                }
+            } else if (episodeId >= 4) {
+                const prevEpisode = episodeId - 1;
+                const hasPlayedPrev = demoState.playedEpisodes.includes(prevEpisode);
+                const rounds = demoState.communicationRounds;
+                const prevCompleteTime = demoState.episodeCompleteTimes[prevEpisode];
+                
+                if (!hasPlayedPrev) {
+                    requirements.push(`播放第${prevEpisode}集`);
+                }
+                if (rounds < 5 && !demoState.unlockedEpisodes.includes(episodeId)) {
+                    requirements.push(`与玩偶沟通5轮次（当前：${rounds}/5）`);
+                }
+
+                // 第四集及以后都需要24小时限制
+                let hoursRemaining = 0;
+                if (prevCompleteTime) {
+                    const now = Date.now();
+                    const hoursPassed = (now - prevCompleteTime) / (1000 * 60 * 60);
+                    hoursRemaining = Math.max(0, 24 - hoursPassed);
+                    if (hoursRemaining > 0) {
+                        const hours = Math.floor(hoursRemaining);
+                        const minutes = Math.floor((hoursRemaining - hours) * 60);
+                        requirements.push(`距离播放第${prevEpisode}集间隔24小时（还需等待：${hours}小时${minutes}分钟）`);
+                    }
+                } else if (hasPlayedPrev) {
+                    requirements.push(`距离播放第${prevEpisode}集间隔24小时`);
+                }
+                
+                if (requirements.length > 0) {
+                    message = `解锁第${episodeId}集需要：\n${requirements.map((req, index) => `${index + 1}. ${req}`).join('\n')}`;
+                } else {
+                    message = `第${episodeId}集已满足所有解锁条件，可以播放了！`;
+                }
+            }
+            
+            alert(message);
+        }
+
+        // 模拟增加沟通轮次（用于演示）
+        function addCommunicationRound() {
+            demoState.communicationRounds++;
+            tryUnlockByRounds();
+            saveDemoState();
+            renderEpisodes();
+        }
+
+        function tryUnlockByRounds() {
+            // 第二集解锁：第一集已播放 + 沟通3轮次
+            if (!demoState.unlockedEpisodes.includes(2) && demoState.playedEpisodes.includes(1) && demoState.communicationRounds >= 3) {
+                demoState.unlockedEpisodes.push(2);
+                demoState.communicationRounds = 0;
+                saveDemoState();
+                return;
+            }
+
+            // 第三集解锁：第一、二集已播放 + 沟通5轮次
+            if (!demoState.unlockedEpisodes.includes(3) &&
+                demoState.playedEpisodes.includes(1) &&
+                demoState.playedEpisodes.includes(2) &&
+                demoState.communicationRounds >= 5) {
+                demoState.unlockedEpisodes.push(3);
+                demoState.communicationRounds = 0;
+                saveDemoState();
+                return;
+            }
+
+            // 第四集解锁：第三集已播放 + 沟通5轮次 + 24小时
+            if (!demoState.unlockedEpisodes.includes(4) &&
+                demoState.playedEpisodes.includes(3) &&
+                demoState.communicationRounds >= 5) {
+                const prevCompleteTime = demoState.episodeCompleteTimes[3];
+                if (prevCompleteTime) {
+                    const now = Date.now();
+                    const hoursPassed = (now - prevCompleteTime) / (1000 * 60 * 60);
+                    if (hoursPassed >= 24) {
+                        demoState.unlockedEpisodes.push(4);
+                        demoState.communicationRounds = 0;
+                        saveDemoState();
+                        return;
+                    }
+                }
+            }
+
+            // 第五集及以后：上一集已播放 + 沟通5轮次 + 24小时
+            for (let episodeId = 5; episodeId <= 7; episodeId++) {
+                if (demoState.unlockedEpisodes.includes(episodeId)) {
+                    continue;
+                }
+                const prevEpisode = episodeId - 1;
+                if (demoState.playedEpisodes.includes(prevEpisode) && demoState.communicationRounds >= 5) {
+                    const prevCompleteTime = demoState.episodeCompleteTimes[prevEpisode];
+                    if (prevCompleteTime) {
+                        const now = Date.now();
+                        const hoursPassed = (now - prevCompleteTime) / (1000 * 60 * 60);
+                        if (hoursPassed >= 24) {
+                            demoState.unlockedEpisodes.push(episodeId);
+                            demoState.communicationRounds = 0;
+                            saveDemoState();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 页面加载时初始化
+        function initialize() {
+            if (document.readyState === 'loading') {
+                window.addEventListener('DOMContentLoaded', function() {
+                    initPage();
+                });
+            } else {
+                initPage();
+            }
+        }
+        
+        // 立即尝试初始化
+        initialize();
+        
+        // 页面显示时刷新（从视频播放页面返回时）
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // 重新加载状态
+                demoState = loadDemoState();
+                renderEpisodes();
+            }
+        });
+        
+        // 添加键盘快捷键用于演示（全局监听）
+        document.addEventListener('keydown', function(e) {
+            // 如果不在输入框中
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                // 按 C 键增加沟通轮次
+                if (e.key === 'c' || e.key === 'C') {
+                    e.preventDefault();
+                    addCommunicationRound();
+                }
+                // 按 D 键增加24小时
+                if (e.key === 'd' || e.key === 'D') {
+                    e.preventDefault();
+                    add24Hours();
+                }
+            }
+        });
+        
+        // 模拟增加24小时（用于演示）
+        function add24Hours() {
+            // 将所有已完成集数的完成时间往前推24小时
+            let hasChanges = false;
+            for (let episodeId in demoState.episodeCompleteTimes) {
+                demoState.episodeCompleteTimes[episodeId] -= 24 * 60 * 60 * 1000;
+                hasChanges = true;
+            }
+            
+            if (hasChanges) {
+                saveDemoState();
+                renderEpisodes();
+                
+                // 显示提示
+                const hintElement = document.querySelector('.demo-hint span');
+                const originalText = hintElement.textContent;
+                hintElement.textContent = '⏰ 已增加24小时！';
+                hintElement.style.color = '#4CAF50';
+                setTimeout(() => {
+                    hintElement.textContent = originalText;
+                    hintElement.style.color = '';
+                }, 1500);
+            } else {
+                // 没有已完成的集数
+                const hintElement = document.querySelector('.demo-hint span');
+                const originalText = hintElement.textContent;
+                hintElement.textContent = '⚠️ 暂无需要等待的集数';
+                hintElement.style.color = '#FF9800';
+                setTimeout(() => {
+                    hintElement.textContent = originalText;
+                    hintElement.style.color = '';
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>

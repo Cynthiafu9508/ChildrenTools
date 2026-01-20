@@ -269,24 +269,33 @@
             
             if (!episode) {
                 alert('未找到该集数');
-                window.location.href = 'theater.html';
+                window.location.href = 'theater-demo.html';
                 return;
             }
             
-            // 检查是否解锁
-            const completedEpisodes = getCompletedEpisodes();
-            const currentEpisode = getCurrentEpisode();
-            const isLocked = episode.id !== currentEpisode && !completedEpisodes.includes(episode.id);
-            
-            if (isLocked) {
-                const prevEpisode = episode.id - 1;
-                alert(`请先完成第${prevEpisode}集才能解锁第${episode.id}集`);
-                window.location.href = 'theater.html';
-                return;
-            }
-            
+            // 不再检查解锁状态，因为用户从 theater-demo.html 跳转过来时已经通过了解锁检查
+            // 直接加载集数内容
             loadEpisode(episode);
             initVideoControls();
+        }
+        
+        // 获取 theater-demo.html 的状态
+        function getDemoState() {
+            const saved = localStorage.getItem('theaterDemoState');
+            if (saved) {
+                return JSON.parse(saved);
+            }
+            return {
+                playedEpisodes: [],
+                unlockedEpisodes: [],
+                communicationRounds: 0,
+                episodeCompleteTimes: {}
+            };
+        }
+        
+        // 保存 theater-demo.html 的状态
+        function saveDemoState(state) {
+            localStorage.setItem('theaterDemoState', JSON.stringify(state));
         }
 
         // 加载集数
@@ -324,7 +333,7 @@
             // 返回按钮
             videoBack.onclick = function() {
                 videoPlayer.pause();
-                window.location.href = 'theater.html';
+                window.location.href = 'theater-demo.html';
             };
             
             // 播放/暂停
@@ -397,23 +406,22 @@
                 const params = getUrlParams();
                 const currentEpisode = params.episode;
                 if (currentEpisode && currentEpisode < episodes.length) {
-                    const nextEpisode = episodes.find(e => e.id === currentEpisode + 1);
-                    if (nextEpisode) {
-                        const completedEpisodes = getCompletedEpisodes();
-                        const currentAvailableEpisode = getCurrentEpisode();
-                        const isLocked = !completedEpisodes.includes(nextEpisode.id) && nextEpisode.id !== currentAvailableEpisode;
-                        if (isLocked) {
-                            let message = `请先完成第${currentEpisode}集才能解锁第${nextEpisode.id}集`;
-                            
-                            // 第4集及以后需要隔日解锁
-                            if (nextEpisode.id >= 4) {
-                                message += `\n\n温馨提示：从第4集开始，除了完成上一集任务外，需要隔日才能解锁新剧集哦～`;
-                            }
-                            
-                            alert(message);
-                        } else {
-                            window.location.href = `video-player.html?episode=${nextEpisode.id}`;
+                    const nextEpisodeId = currentEpisode + 1;
+                    const demoState = getDemoState();
+                    const isPlayed = demoState.playedEpisodes.includes(nextEpisodeId);
+                    const isUnlocked = demoState.unlockedEpisodes.includes(nextEpisodeId);
+                    
+                    if (!isPlayed && !isUnlocked) {
+                        let message = `第${nextEpisodeId}集尚未解锁`;
+                        
+                        // 第4集及以后需要隔日解锁
+                        if (nextEpisodeId >= 4) {
+                            message += `\n\n温馨提示：从第4集开始，除了完成沟通轮次外，还需要等待24小时才能解锁新剧集`;
                         }
+                        
+                        alert(message);
+                    } else {
+                        window.location.href = `video-player.html?episode=${nextEpisodeId}`;
                     }
                 }
             };
@@ -445,19 +453,21 @@
             }, 500);
         }
 
-        // 标记集数为已完成
+        // 标记集数为已完成（同步更新 theater-demo.html 的状态）
         function markEpisodeCompleted(episodeId) {
-            const completed = getCompletedEpisodes();
-            if (!completed.includes(episodeId)) {
-                completed.push(episodeId);
-                localStorage.setItem('theaterCompletedEpisodes', JSON.stringify(completed));
+            const demoState = getDemoState();
+            if (!demoState.playedEpisodes.includes(episodeId)) {
+                demoState.playedEpisodes.push(episodeId);
+                // 记录完成时间（用于24小时计时）
+                demoState.episodeCompleteTimes[episodeId] = Date.now();
+                saveDemoState(demoState);
             }
         }
 
         // 获取已完成的集数
         function getCompletedEpisodes() {
-            const saved = localStorage.getItem('theaterCompletedEpisodes');
-            return saved ? JSON.parse(saved) : [];
+            const demoState = getDemoState();
+            return demoState.playedEpisodes || [];
         }
 
         // 获取当前可播放的集数
