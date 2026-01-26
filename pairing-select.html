@@ -153,6 +153,117 @@
             color: #0f0;
         }
 
+        .scanning-status {
+            text-align: center;
+            padding: 40px 20px;
+            color: #fff;
+        }
+
+        .scanning-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            border: 3px solid #3a3a4e;
+            border-top-color: #FF8C42;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .scanning-text {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .scanning-tip {
+            font-size: 13px;
+            color: #999;
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #fff;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .empty-text {
+            font-size: 14px;
+            color: #999;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .retry-button {
+            width: 200px;
+            height: 44px;
+            background: #FF8C42;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 0 auto;
+            transition: all 0.3s;
+        }
+
+        .retry-button:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .device-card:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .error-message {
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #666;
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            width: 24px;
+            background: #FF8C42;
+            border-radius: 4px;
+        }
+
         .troubleshoot-section {
             margin-top: 40px;
         }
@@ -260,10 +371,38 @@
             color: #fff;
             font-size: 16px;
             outline: none;
+            transition: all 0.3s;
+        }
+
+        .wifi-input-field:focus {
+            color: #fff;
         }
 
         .wifi-input-field::placeholder {
             color: #666;
+        }
+
+        .wifi-input-field.error {
+            border-color: #ff4444;
+        }
+
+        .wifi-input-error {
+            font-size: 12px;
+            color: #ff6b6b;
+            margin-top: 8px;
+            padding-left: 5px;
+            display: none;
+        }
+
+        .wifi-input-error.show {
+            display: block;
+        }
+
+        .wifi-input-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+            padding-left: 5px;
         }
 
         .wifi-select-btn {
@@ -298,6 +437,12 @@
             font-weight: 500;
             cursor: pointer;
             margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .wifi-start-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
         }
 
         .wifi-list-item {
@@ -322,6 +467,114 @@
             font-size: 20px;
         }
 
+        .wifi-list-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .wifi-list-scanning {
+            text-align: center;
+            padding: 60px 20px;
+            color: #fff;
+        }
+
+        .wifi-list-scanning-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 20px;
+            border: 3px solid #3a3a4e;
+            border-top-color: #FF8C42;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .wifi-list-scanning-text {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .wifi-list-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #fff;
+        }
+
+        .wifi-list-empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .wifi-list-empty-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .wifi-list-empty-text {
+            font-size: 14px;
+            color: #999;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .wifi-list-empty-reason {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .wifi-list-empty-reason-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #FF8C42;
+            margin-bottom: 10px;
+        }
+
+        .wifi-list-empty-reason-item {
+            font-size: 13px;
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .wifi-list-empty-reason-item::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #FF8C42;
+        }
+
+        .wifi-list-empty-reason-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .wifi-list-rescan-btn {
+            width: 200px;
+            height: 44px;
+            background: #FF8C42;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 0 auto;
+            transition: all 0.3s;
+        }
+
+        .wifi-list-rescan-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
         .status-icon {
             width: 80px;
             height: 80px;
@@ -337,6 +590,10 @@
             background: #0f0;
         }
 
+        .status-icon.error {
+            background: #ff4444;
+        }
+
         .status-icon.loading {
             background: #3a3a4e;
             animation: spin 1s linear infinite;
@@ -345,6 +602,15 @@
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
         }
 
         .status-text {
@@ -540,7 +806,27 @@
                 <div class="device-select-title">选择并绑定设备</div>
                 <div class="device-select-subtitle">选择要绑定的设备,点击进入下一步</div>
 
-                <div class="device-card" id="deviceCard">
+                <div class="step-indicator">
+                    <div class="step-dot"></div>
+                    <div class="step-dot active"></div>
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+                <div id="scanningStatus" class="scanning-status" style="display: none;">
+                    <div class="scanning-icon"></div>
+                    <div class="scanning-text">正在扫描设备...</div>
+                    <div class="scanning-tip">请确保设备已开机并进入配网模式<br>保持手机蓝牙已开启</div>
+                </div>
+
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <div class="empty-icon">📡</div>
+                    <div class="empty-title">未找到设备</div>
+                    <div class="empty-text">请检查设备是否已开机并进入配网模式<br>确保手机蓝牙已开启</div>
+                    <div class="retry-button" id="retryButton">重新扫描</div>
+                </div>
+
+                <div class="device-card" id="deviceCard" style="display: none;">
                     <div class="device-icon">📶</div>
                     <div class="device-info">
                         <div class="device-name">设备名称: JZ-YDT-01</div>
@@ -551,7 +837,7 @@
 
                 <div class="troubleshoot-section">
                     <div class="troubleshoot-title">找不到设备?</div>
-                    <div class="troubleshoot-item">1. 设备未进入配网模式。请再试一次</div>
+                    <div class="troubleshoot-item">1. 设备未进入配网模式。请重启设备</div>
                     <div class="troubleshoot-item">
                         2. 手机蓝牙设置。请检查是否开启,可前往"设置—蓝牙"中开启功能,再返回小程序操作
                     </div>
@@ -579,9 +865,11 @@
         <div class="wifi-input-group">
             <div class="wifi-input">
                 <span class="wifi-input-icon">📶</span>
-                <input type="text" class="wifi-input-field" id="wifiNameInput" placeholder="请输入名称" readonly>
+                <input type="text" class="wifi-input-field" id="wifiNameInput" placeholder="请输入或选择WiFi名称" maxlength="32">
                 <div class="wifi-select-btn" id="wifiSelectBtn">选择WIFI</div>
             </div>
+            <div class="wifi-input-error" id="wifiNameError"></div>
+            <div class="wifi-input-hint">WiFi名称长度为1-32个字符，支持中文、英文、数字和常用符号</div>
         </div>
 
         <div class="wifi-input-group">
@@ -602,25 +890,34 @@
             <div class="modal-close" id="wifiListClose">×</div>
         </div>
         <div class="wifi-warning">仅支持2.4G Wi-Fi和个人手机热点(需打开最大兼容性)</div>
-        <div class="wifi-list-item">
-            <span class="wifi-list-name">Tqtj</span>
-            <span class="wifi-list-signal">📶</span>
+        
+        <!-- 扫描中状态 -->
+        <div class="wifi-list-scanning" id="wifiListScanning" style="display: none;">
+            <div class="wifi-list-scanning-icon"></div>
+            <div class="wifi-list-scanning-text">正在搜索WiFi网络...</div>
         </div>
-        <div class="wifi-list-item">
-            <span class="wifi-list-name">HF-LPB120</span>
-            <span class="wifi-list-signal">📶</span>
+
+        <!-- WiFi列表 -->
+        <div class="wifi-list-container" id="wifiListContainer">
+            <!-- WiFi列表项将动态加载 -->
         </div>
-        <div class="wifi-list-item">
-            <span class="wifi-list-name">很慢很慢的网</span>
-            <span class="wifi-list-signal">📶</span>
-        </div>
-        <div class="wifi-list-item">
-            <span class="wifi-list-name">GOU</span>
-            <span class="wifi-list-signal">📶</span>
-        </div>
-        <div class="wifi-list-item">
-            <span class="wifi-list-name">34-702</span>
-            <span class="wifi-list-signal">📶</span>
+
+        <!-- 空状态 -->
+        <div class="wifi-list-empty" id="wifiListEmpty" style="display: none;">
+            <div class="wifi-list-empty-icon">📡</div>
+            <div class="wifi-list-empty-title">未搜索到WiFi网络</div>
+            <div class="wifi-list-empty-text">未找到可用的WiFi网络，可能的原因：</div>
+            <div class="wifi-list-empty-reason">
+                <div class="wifi-list-empty-reason-title">可能的原因：</div>
+                <div class="wifi-list-empty-reason-item">手机WiFi功能未开启，请前往"设置-WiFi"开启</div>
+                <div class="wifi-list-empty-reason-item">当前位置没有可用的WiFi网络</div>
+                <div class="wifi-list-empty-reason-item">WiFi网络信号太弱，无法被检测到</div>
+                <div class="wifi-list-empty-reason-item">部分隐藏的WiFi网络不会显示在列表中</div>
+            </div>
+            <div class="wifi-list-empty-text" style="text-align: center; margin-top: 20px;">
+                您可以手动输入WiFi名称，或点击下方按钮重新搜索
+            </div>
+            <div class="wifi-list-rescan-btn" id="wifiListRescanBtn">重新搜索</div>
         </div>
     </div>
 
@@ -715,15 +1012,62 @@
 
         // 页面加载时初始化
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initBackButton);
+            document.addEventListener('DOMContentLoaded', function() {
+                initBackButton();
+                startDeviceScan();
+            });
         } else {
             initBackButton();
+            startDeviceScan();
         }
 
-        // 设备卡片点击
-        document.getElementById('deviceCard').addEventListener('click', function() {
-            showBindSuccess();
+        // 开始扫描设备
+        function startDeviceScan() {
+            const scanningStatus = document.getElementById('scanningStatus');
+            const deviceCard = document.getElementById('deviceCard');
+            const emptyState = document.getElementById('emptyState');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // 隐藏其他状态
+            deviceCard.style.display = 'none';
+            emptyState.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // 显示扫描状态
+            scanningStatus.style.display = 'block';
+            
+            // 模拟扫描过程（实际应该调用蓝牙API）
+            setTimeout(function() {
+                // 模拟扫描成功
+                const scanSuccess = Math.random() > 0.3; // 70%成功率
+                
+                if (scanSuccess) {
+                    scanningStatus.style.display = 'none';
+                    deviceCard.style.display = 'flex';
+                } else {
+                    scanningStatus.style.display = 'none';
+                    emptyState.style.display = 'block';
+                }
+            }, 2000);
+        }
+
+        // 重新扫描
+        document.getElementById('retryButton').addEventListener('click', function() {
+            startDeviceScan();
         });
+
+        // 设备卡片点击
+        const deviceCard = document.getElementById('deviceCard');
+        if (deviceCard) {
+            deviceCard.addEventListener('click', function() {
+                // 添加点击反馈
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                    showBindSuccess();
+                }, 150);
+            });
+        }
 
         function showBindSuccess() {
             const modal = document.getElementById('statusModal');
@@ -746,21 +1090,176 @@
         }
 
         function showWifiModal() {
+            // 打开弹窗时清除之前的输入和错误状态
+            const wifiNameInput = document.getElementById('wifiNameInput');
+            const wifiPasswordInput = document.getElementById('wifiPasswordInput');
+            const wifiNameError = document.getElementById('wifiNameError');
+            
+            wifiNameInput.value = '';
+            wifiPasswordInput.value = '';
+            wifiNameInput.classList.remove('error');
+            wifiNameError.classList.remove('show');
+            wifiNameError.textContent = '';
+            
             document.getElementById('wifiModal').classList.add('show');
+        }
+
+        // WiFi列表数据（模拟数据，实际应该从API获取）
+        const mockWifiList = [
+            { name: 'Tqtj', signal: '📶' },
+            { name: 'HF-LPB120', signal: '📶' },
+            { name: '很慢很慢的网', signal: '📶' },
+            { name: 'GOU', signal: '📶' },
+            { name: '34-702', signal: '📶' }
+        ];
+
+        // 搜索WiFi列表
+        function searchWifiList() {
+            const wifiListContainer = document.getElementById('wifiListContainer');
+            const wifiListScanning = document.getElementById('wifiListScanning');
+            const wifiListEmpty = document.getElementById('wifiListEmpty');
+            
+            // 显示扫描状态
+            wifiListContainer.innerHTML = '';
+            wifiListScanning.style.display = 'block';
+            wifiListEmpty.style.display = 'none';
+            
+            // 模拟搜索过程（实际应该调用蓝牙/系统API）
+            setTimeout(function() {
+                wifiListScanning.style.display = 'none';
+                
+                // 模拟搜索结果（70%概率有WiFi，30%概率为空）
+                const hasWifi = Math.random() > 0.3;
+                
+                if (hasWifi && mockWifiList.length > 0) {
+                    // 显示WiFi列表
+                    renderWifiList(mockWifiList);
+                    wifiListContainer.style.display = 'block';
+                    wifiListEmpty.style.display = 'none';
+                } else {
+                    // 显示空状态
+                    wifiListContainer.style.display = 'none';
+                    wifiListEmpty.style.display = 'block';
+                }
+            }, 1500);
+        }
+
+        // HTML转义函数
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 渲染WiFi列表
+        function renderWifiList(wifiList) {
+            const wifiListContainer = document.getElementById('wifiListContainer');
+            wifiListContainer.innerHTML = '';
+            
+            wifiList.forEach(function(wifi) {
+                const wifiItem = document.createElement('div');
+                wifiItem.className = 'wifi-list-item';
+                wifiItem.innerHTML = `
+                    <span class="wifi-list-name">${escapeHtml(wifi.name)}</span>
+                    <span class="wifi-list-signal">${wifi.signal}</span>
+                `;
+                
+                wifiItem.addEventListener('click', function() {
+                    const wifiName = wifi.name;
+                    const wifiNameInput = document.getElementById('wifiNameInput');
+                    wifiNameInput.value = wifiName;
+                    document.getElementById('wifiListModal').classList.remove('show');
+                    // 选择后清除错误状态
+                    validateWifiName(wifiName);
+                });
+                
+                wifiListContainer.appendChild(wifiItem);
+            });
         }
 
         // WiFi选择按钮
         document.getElementById('wifiSelectBtn').addEventListener('click', function() {
             document.getElementById('wifiListModal').classList.add('show');
+            // 打开时开始搜索
+            searchWifiList();
         });
 
-        // WiFi列表项点击
-        document.querySelectorAll('.wifi-list-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const wifiName = this.querySelector('.wifi-list-name').textContent;
-                document.getElementById('wifiNameInput').value = wifiName;
-                document.getElementById('wifiListModal').classList.remove('show');
-            });
+        // 重新搜索按钮
+        document.getElementById('wifiListRescanBtn').addEventListener('click', function() {
+            searchWifiList();
+        });
+
+        // WiFi名称校验函数
+        function validateWifiName(wifiName) {
+            const wifiNameInput = document.getElementById('wifiNameInput');
+            const wifiNameError = document.getElementById('wifiNameError');
+            
+            // 清除之前的错误状态
+            wifiNameInput.classList.remove('error');
+            wifiNameError.classList.remove('show');
+            wifiNameError.textContent = '';
+            
+            if (!wifiName || wifiName.trim() === '') {
+                wifiNameInput.classList.add('error');
+                wifiNameError.textContent = '请输入WiFi名称';
+                wifiNameError.classList.add('show');
+                return false;
+            }
+            
+            const trimmedName = wifiName.trim();
+            
+            // 长度校验：1-32个字符
+            if (trimmedName.length < 1) {
+                wifiNameInput.classList.add('error');
+                wifiNameError.textContent = 'WiFi名称不能为空';
+                wifiNameError.classList.add('show');
+                return false;
+            }
+            
+            if (trimmedName.length > 32) {
+                wifiNameInput.classList.add('error');
+                wifiNameError.textContent = 'WiFi名称不能超过32个字符';
+                wifiNameError.classList.add('show');
+                return false;
+            }
+            
+            // 字符校验：支持中文、英文、数字、连字符、下划线、点号
+            const wifiNamePattern = /^[\u4e00-\u9fa5a-zA-Z0-9_\-\.\s]+$/;
+            if (!wifiNamePattern.test(trimmedName)) {
+                wifiNameInput.classList.add('error');
+                wifiNameError.textContent = 'WiFi名称包含非法字符，仅支持中文、英文、数字、连字符、下划线和点号';
+                wifiNameError.classList.add('show');
+                return false;
+            }
+            
+            // 不能全为空格
+            if (trimmedName.replace(/\s/g, '').length === 0) {
+                wifiNameInput.classList.add('error');
+                wifiNameError.textContent = 'WiFi名称不能全为空格';
+                wifiNameError.classList.add('show');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // WiFi名称输入实时校验
+        const wifiNameInput = document.getElementById('wifiNameInput');
+        wifiNameInput.addEventListener('input', function() {
+            const value = this.value;
+            // 实时校验，但只在有内容时显示错误
+            if (value.trim() !== '') {
+                validateWifiName(value);
+            } else {
+                // 清空时清除错误状态
+                this.classList.remove('error');
+                document.getElementById('wifiNameError').classList.remove('show');
+            }
+        });
+
+        // WiFi名称失焦时校验
+        wifiNameInput.addEventListener('blur', function() {
+            validateWifiName(this.value);
         });
 
         // 弹窗关闭
@@ -783,22 +1282,53 @@
 
         // 开始配网按钮
         document.getElementById('wifiStartBtn').addEventListener('click', function() {
-            const wifiName = document.getElementById('wifiNameInput').value;
+            const wifiName = document.getElementById('wifiNameInput').value.trim();
             const wifiPassword = document.getElementById('wifiPasswordInput').value;
             
-            if (!wifiName) {
-                alert('请选择WiFi网络');
+            // 添加点击反馈
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+            
+            // 校验WiFi名称
+            if (!validateWifiName(wifiName)) {
+                // 滚动到错误位置
+                document.getElementById('wifiNameInput').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
             
             if (!wifiPassword) {
-                alert('请输入WiFi密码');
+                showError('请输入WiFi密码');
+                return;
+            }
+            
+            // 密码长度校验（至少8个字符）
+            if (wifiPassword.length < 8) {
+                showError('WiFi密码至少需要8个字符');
+                return;
+            }
+            
+            if (wifiPassword.length > 64) {
+                showError('WiFi密码不能超过64个字符');
                 return;
             }
             
             document.getElementById('wifiModal').classList.remove('show');
             showSendingStatus();
         });
+
+        // 显示错误信息
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            
+            // 3秒后自动隐藏
+            setTimeout(function() {
+                errorMessage.style.display = 'none';
+            }, 3000);
+        }
 
         function showSendingStatus() {
             const modal = document.getElementById('statusModal');
@@ -813,9 +1343,33 @@
             
             modal.classList.add('show');
             
+            // 模拟发送过程，实际应该调用API
             setTimeout(function() {
-                showPairingSuccess();
+                // 模拟90%成功率
+                const success = Math.random() > 0.1;
+                if (success) {
+                    showPairingSuccess();
+                } else {
+                    showPairingError();
+                }
             }, 2000);
+        }
+
+        function showPairingError() {
+            const icon = document.getElementById('statusIcon');
+            const text = document.getElementById('statusText');
+            const button = document.getElementById('statusButton');
+            
+            icon.className = 'status-icon error';
+            icon.textContent = '✕';
+            text.textContent = '配网失败，请重试';
+            button.textContent = '重试';
+            button.style.display = 'block';
+            
+            button.onclick = function() {
+                document.getElementById('statusModal').classList.remove('show');
+                showWifiModal();
+            };
         }
 
         function showPairingSuccess() {
@@ -829,51 +1383,63 @@
             button.textContent = '完成';
             button.style.display = 'block';
             
+            // 添加成功动画效果
+            icon.style.animation = 'none';
+            setTimeout(() => {
+                icon.style.animation = 'scaleIn 0.3s ease-out';
+            }, 10);
+            
             button.onclick = function() {
-                document.getElementById('statusModal').classList.remove('show');
-                
-                // 获取设备信息
-                const deviceIdElement = document.querySelector('#deviceCard .device-id');
-                const deviceNameElement = document.querySelector('#deviceCard .device-name');
-                
-                let deviceId = '9C284003504A'; // 默认ID
-                let deviceName = 'JZ-YDT-01'; // 默认名称
-                
-                if (deviceIdElement) {
-                    const idText = deviceIdElement.textContent;
-                    const idMatch = idText.match(/ID:\s*(.+)/);
-                    if (idMatch) {
-                        deviceId = idMatch[1].trim();
+                // 添加点击反馈
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                    
+                    document.getElementById('statusModal').classList.remove('show');
+                    
+                    // 获取设备信息
+                    const deviceIdElement = document.querySelector('#deviceCard .device-id');
+                    const deviceNameElement = document.querySelector('#deviceCard .device-name');
+                    
+                    let deviceId = '9C284003504A'; // 默认ID
+                    let deviceName = 'JZ-YDT-01'; // 默认名称
+                    
+                    if (deviceIdElement) {
+                        const idText = deviceIdElement.textContent;
+                        const idMatch = idText.match(/ID:\s*(.+)/);
+                        if (idMatch) {
+                            deviceId = idMatch[1].trim();
+                        }
                     }
-                }
-                
-                if (deviceNameElement) {
-                    const nameText = deviceNameElement.textContent;
-                    const nameMatch = nameText.match(/设备名称:\s*(.+)/);
-                    if (nameMatch) {
-                        deviceName = nameMatch[1].trim();
+                    
+                    if (deviceNameElement) {
+                        const nameText = deviceNameElement.textContent;
+                        const nameMatch = nameText.match(/设备名称:\s*(.+)/);
+                        if (nameMatch) {
+                            deviceName = nameMatch[1].trim();
+                        }
                     }
-                }
-                
-                // 如果设备ID为空，生成一个唯一ID
-                if (!deviceId || deviceId === '9C284003504A') {
-                    deviceId = 'DEVICE_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9).toUpperCase();
-                }
-                
-                // 添加设备到设备列表
-                addDeviceToList(deviceId, deviceName);
-                
-                // 设置配网完成状态
-                localStorage.setItem('devicePaired', 'true');
-                
-                // 直接跳转到设备管理页面
-                const urlParams = new URLSearchParams(window.location.search);
-                const from = urlParams.get('from');
-                if (from === 'device-manage') {
-                    window.location.href = 'device-manage.html';
-                } else {
-                    window.location.href = 'device-manage.html';
-                }
+                    
+                    // 如果设备ID为空，生成一个唯一ID
+                    if (!deviceId || deviceId === '9C284003504A') {
+                        deviceId = 'DEVICE_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                    }
+                    
+                    // 添加设备到设备列表
+                    addDeviceToList(deviceId, deviceName);
+                    
+                    // 设置配网完成状态
+                    localStorage.setItem('devicePaired', 'true');
+                    
+                    // 直接跳转到设备管理页面
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const from = urlParams.get('from');
+                    if (from === 'device-manage') {
+                        window.location.href = 'device-manage.html';
+                    } else {
+                        window.location.href = 'device-manage.html';
+                    }
+                }, 150);
             };
         }
 
